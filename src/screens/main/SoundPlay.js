@@ -331,7 +331,8 @@ const styles = StyleSheet.create({
   },
   icon_back:{
     width: 30, 
-    height: 30
+    height: 30,
+    tintColor: APP_WHITE_COLOR
   },
   podcast_cover_card:{
     height: HEIGHT * .4, 
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   liked_icon:{
     width: 30, 
     height: 30, 
-    tintColor: 'black' 
+    tintColor: APP_ORANGE_COLOR 
   },
   main_buttom_contol:{
     position: "absolute", 

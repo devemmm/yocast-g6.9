@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { Component, useState, useContext, useEffect } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput } from 'react-native'
 import { bright, H, StatusBarHeight, _grey } from '../../constants/constants'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet } from 'react-native-btr';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import serverConfig from '../../constants/server.json';
 import { Context as DataContext } from '../../context/AppContext';
 

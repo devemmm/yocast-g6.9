@@ -190,25 +190,25 @@ export class Home extends Component {
 
                 </View>
                 <ScrollView 
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingLeft: 15 }}
-                horizontal>
-                    {this.state.Popular.splice(0,7).map((item, index) => {
-                        return (
-                    <TouchableOpacity
-                        onPress = {()=> this.props.navigation.navigate("SoundPlay", {podcasts: splicePodcast(this.state.Popular, item)})}
-                        key={index} 
-                        style={{ width: W * .35, marginRight: 10 }}>
-                            <Image source={{ uri: item.cover }} style={{ width: W * .35, height: W * .3, borderRadius: 5, resizeMode: 'cover' }}  />
-                            { item.isFree === 0 && 
-                            <View style={{ position: 'absolute', backgroundColor: 'green', paddingVertical: 3, paddingHorizontal: 7, top: 5, borderTopRightRadius: 3, borderBottomRightRadius: 3  }}>
-                                <Text style={{ color: 'white', fontSize: 10 }}>RWF {item.price}</Text>
-                            </View> }
-                            <Text numberOfLines={3} style={styles.podcast_name}>{item.name}</Text>
-                            <Text style={styles.podcast_owner}>{item.ownerName}</Text>
-                    </TouchableOpacity>
-                        )
-                    })}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingLeft: 15 }}
+                    horizontal>
+                        {this.state.Popular.splice(0,7).map((item, index) => {
+                            return (
+                        <TouchableOpacity
+                            onPress = {()=> this.props.navigation.navigate("SoundPlay", {podcasts: splicePodcast(this.state.Popular, item)})}
+                            key={index} 
+                            style={{ width: W * .35, marginRight: 10 }}>
+                                <Image source={{ uri: item.cover }} style={{ width: W * .35, height: W * .3, borderRadius: 5, resizeMode: 'cover' }}  />
+                                { item.isFree === 0 && 
+                                <View style={{ position: 'absolute', backgroundColor: 'green', paddingVertical: 3, paddingHorizontal: 7, top: 5, borderTopRightRadius: 3, borderBottomRightRadius: 3  }}>
+                                    <Text style={{ color: 'white', fontSize: 10 }}>RWF {item.price}</Text>
+                                </View> }
+                                <Text numberOfLines={3} style={styles.podcast_name}>{item.name}</Text>
+                                <Text style={styles.podcast_owner}>{item.ownerName}</Text>
+                        </TouchableOpacity>
+                            )
+                        })}
                 </ScrollView>
             </View> }
 
