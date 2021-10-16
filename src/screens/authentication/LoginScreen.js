@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
-import { bright, H, W, primary, StatusBarHeight, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR, APP_WHITE_COLOR } from '../../constants/constants';
+import { bright, H, W, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR, APP_WHITE_COLOR } from '../../constants/constants';
 import { Context as AuthContext } from '../../context/AppContext';
+import validator from 'validator';
 
 const LoginScreen = ({navigation})=>{
 
@@ -9,7 +10,8 @@ const LoginScreen = ({navigation})=>{
 
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
-    const[submitting, setSubmitting] = useState(false)
+    const[submitting, setSubmitting] = useState(false);
+    const[passwordVisibility, setPasswordVisibility] = useState(true)
 
     return (
         <View style ={ styles.container}>
@@ -33,29 +35,35 @@ const LoginScreen = ({navigation})=>{
                 </View>
 
                 <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: validator.isEmail(email) || email.length == 0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             placeholder="Email"
                             style={styles.txt_input} 
                             autoCapitalize = "none"
+                            autoFocus={true}
                             autoCorrect = {false}
                             value={email}
+                            autoCompleteType="email"
                             onChangeText={email => setEmail(email)}
                         />
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: validator.isLength(password,{min: 6, max: 30}) || password.length ===0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             autoCapitalize = "none"
                             autoCorrect = {false}
                             placeholder="Password"
-                            secureTextEntry
+                            
+                            secureTextEntry = {passwordVisibility}
                             style={styles.txt_input}
                             value={password}
                             onChangeText={password => setPassword(password)}
                         />
-                        <TouchableOpacity style={{ paddingVertical: 5 }}>
-                            <Image source={require('../../../assets/Hide.png')} style={{ height: 35, width: 35 }} />
+                        <TouchableOpacity 
+                            style={{ paddingVertical: 5 }}
+                            onPress={()=>passwordVisibility? setPasswordVisibility(false): setPasswordVisibility(true)}
+                        >
+                            <Image source={ passwordVisibility?require('../../../assets/Show.png') : require('../../../assets/Hide.png')} style={{ height: 35, width: 35, tintColor: APP_ORANGE_COLOR }} />
                         </TouchableOpacity>
                     </View>
 

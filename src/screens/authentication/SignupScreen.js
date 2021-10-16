@@ -1,13 +1,15 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useState, useContext, useReducer } from 'react'
 import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { APP_ORANGE_COLOR,APP_BACKGROUND_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, W, _grey } from '../../constants/constants';
-import { signupReducer } from '../../context/AppContext'
+import { signupReducer } from '../../context/AppContext';
 import { Context as AuthContext } from '../../context/AppContext'
 
 
 const SignupScreen = ({navigation})=> {
     const [state, dispatch] = useReducer( signupReducer, {submitting: false, names: '', email: '', phone: '', country: '', password: '', c_password: ''})
     const { submitting, names, email, phone, country, password, c_password} = state;
+    
+    const[passwordVisibility, setPasswordVisibility] = useState(true);
     const signup = useContext(AuthContext).signup;
 
     return (
@@ -84,8 +86,11 @@ const SignupScreen = ({navigation})=> {
                             value={state.password}
                             onChangeText={password => dispatch({ type: 'set_password', payload: password})}
                         />
-                        <TouchableOpacity style={{ paddingVertical: 5 }}>
-                            <Image source={require('../../../assets/Hide.png')} style={{ height: 30, width: 30 }} />
+                        <TouchableOpacity 
+                            onPress={()=>passwordVisibility? setPasswordVisibility(false): setPasswordVisibility(true)}
+                            style={{ paddingVertical: 5 }}
+                        >
+                            <Image source={passwordVisibility ? require('../../../assets/Show.png') : require('../../../assets/Hide.png')} style={{ height: 30, width: 30, tintColor: APP_ORANGE_COLOR }} />
                         </TouchableOpacity>
                     </View>
 
@@ -99,8 +104,11 @@ const SignupScreen = ({navigation})=> {
                             value={state.c_password}
                             onChangeText={c_password => dispatch({ type: 'set_c_password', payload: c_password})}
                         />
-                        <TouchableOpacity style={{ paddingVertical: 5 }}>
-                            <Image source={require('../../../assets/Hide.png')} style={{ height: 30, width: 30 }} />
+                        <TouchableOpacity 
+                            onPress={()=>passwordVisibility? setPasswordVisibility(false): setPasswordVisibility(true)}
+                            style={{ paddingVertical: 5 }}
+                        >
+                            <Image source={passwordVisibility ? require('../../../assets/Show.png') : require('../../../assets/Hide.png')} style={{ height: 30, width: 30, tintColor: APP_ORANGE_COLOR }} />
                         </TouchableOpacity>
                     </View>
 
