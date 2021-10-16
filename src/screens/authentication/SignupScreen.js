@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react'
-import { Image, ScrollView, TouchableOpacity, View, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { bright, H, primary, StatusBarHeight, W, _grey } from '../../constants/constants';
+import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { APP_ORANGE_COLOR,APP_BACKGROUND_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, W, _grey } from '../../constants/constants';
 import { signupReducer } from '../../context/AppContext'
 import { Context as AuthContext } from '../../context/AppContext'
 
@@ -11,20 +11,24 @@ const SignupScreen = ({navigation})=> {
     const signup = useContext(AuthContext).signup;
 
     return (
-        <View>
+        <View style={{backgroundColor: APP_BACKGROUND_COLOR, flex: 1}}>
+            <StatusBar
+                animated = {true}
+                backgroundColor = {APP_BACKGROUND_COLOR}
+            />
             <ScrollView
-                contentContainerStyle={{ marginTop: StatusBarHeight }}>
+                contentContainerStyle={{}}>
                 <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingVertical: 5, paddingRight: 10 }}>
-                        <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30 }} />
+                        <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30, tintColor: APP_WHITE_COLOR }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")} style={{  paddingVertical: 5 }}>
-                        <Text style={{ color: _grey }}>Login Instead?</Text>
+                        <Text style={{ color: APP_WHITE_COLOR }}>Login Instead?</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ paddingHorizontal: 15, paddingTop: H * .05, width: '80%' }}>
-                    <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Create an account</Text>
-                    <Text style={{ fontSize: 13, color: _grey }}>Create an account today and start enjoying your favorite podcasts</Text>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Create an account</Text>
+                    <Text style={{ fontSize: 13, color: APP_WHITE_COLOR }}>Create an account today and start enjoying your favorite podcasts</Text>
                 </View>
 
                 <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>
@@ -117,7 +121,7 @@ const SignupScreen = ({navigation})=> {
                             })
                         }       
                     } 
-                    style={{ backgroundColor: primary, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+                    style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
                         <Text style={{ color: bright, fontSize: 16 }}>Continue</Text>
                     </TouchableOpacity>
                     <View style={{ marginBottom: H * .1 }} />

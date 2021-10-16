@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
-import { Image, ScrollView, TouchableOpacity, View, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
-import { bright, H, W, primary, StatusBarHeight, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR } from '../../constants/constants';
+import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
+import { bright, H, W, primary, StatusBarHeight, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR, APP_WHITE_COLOR } from '../../constants/constants';
 import { Context as AuthContext } from '../../context/AppContext';
 
 const LoginScreen = ({navigation})=>{
@@ -13,11 +13,15 @@ const LoginScreen = ({navigation})=>{
 
     return (
         <View style ={ styles.container}>
+            <StatusBar
+                animated = {true}
+                backgroundColor = {APP_BACKGROUND_COLOR}
+            />
             <ScrollView
                 contentContainerStyle={styles.main_container}>
                 <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
                     <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={{ paddingVertical: 5, paddingRight: 10 }}>
-                        <Image source={require('../../../assets/arrow-left.png')} style={{ height: 35, width: 35 }} />
+                        <Image source={require('../../../assets/arrow-left.png')} style={{ height: 35, width: 35, tintColor: APP_WHITE_COLOR }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen")} style={{  paddingVertical: 5 }}>
                         <Text style={{ color: '#fff', fontSize: 16 }}>Forgot Password?</Text>
