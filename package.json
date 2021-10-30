@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/stack": "^6.0.9",
     "expo-av": "^9.2.3",
+    "flutterwave-react-native": "^1.0.2",
     "moment": "^2.29.1",
     "react": "17.0.2",
     "react-native": "0.66.0",
@@ -28,6 +29,7 @@
     "react-native-screens": "^3.8.0",
     "react-native-track-player": "^2.1.1",
     "react-native-vector-icons": "^8.1.0",
+    "react-native-webview": "^11.14.2",
     "validator": "^13.6.0"
   },
   "devDependencies": {
