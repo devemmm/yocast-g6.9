@@ -64,7 +64,7 @@ const tryLocalSignin = dispatch => async({navigation})=>{
         dispatch({type: 'signin', payload: {user, token: user.token.token}})
         navigation.navigate("InAppNavigation")
     }else{
-        navigation.navigate("LoginScreen")
+        navigation.navigate("Welcome")
     }
   }
 
