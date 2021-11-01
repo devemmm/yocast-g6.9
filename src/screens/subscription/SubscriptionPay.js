@@ -1,38 +1,65 @@
-import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
-import { H, StatusBarHeight, _grey } from '../../constants/constants'
+import React, { useState, useContext } from 'react'
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, H, StatusBarHeight, _grey } from '../../constants/constants'
+import { Context as DataContext } from '../../context/AppContext';
+import { FluterwavePaymentButton } from '../../components/FluterwavePaymentButton';
+import { PayWithFlutterwave } from 'flutterwave-react-native';
 
 
-export class SubscriptionPay extends Component {
-    render() {
-        return (
-        <ScrollView style={{ marginTop: StatusBarHeight }}>
+const SubscriptionPay  = ({navigation, route})=>{
+
+    const { state, registerSubscription } = useContext(DataContext);
+    const [_package, setPackage] = useState(route.params._package);
+
+    return (
+        <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
             <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
-                    <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30 }} />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
+                    <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30, tintColor: APP_WHITE_COLOR}} />
                 </TouchableOpacity>
-                <Text style={{flex: .5, textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>Subscription</Text>
+                <Text style={{flex: .5, textAlign: 'center', fontSize: 17, fontWeight: 'bold', color: APP_ORANGE_COLOR}}>Subscription</Text>
                 <View style={{ flex: .25 }}/>
             </View>
             <View style={{ paddingHorizontal: 15, paddingTop: H * .03, paddingBottom: 20, width: '80%' }}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Choose Payment Method</Text>
-                <Text style={{ fontSize: 13, color: _grey }}>Your membership will start as you as you click proceed</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR}}>Choose Payment Method</Text>
+                <Text style={{ fontSize: 13, color: APP_WHITE_COLOR }}>Your membership will start as you as you click proceed</Text>
             </View>
-            <TouchableOpacity style={{ marginHorizontal: 15, backgroundColor: 'orange', paddingVertical: 20, paddingHorizontal: 15, borderRadius: 7, marginBottom: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Credit/Debit Card</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>RWF 9,900</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginHorizontal: 15, backgroundColor: 'orange', paddingVertical: 20, paddingHorizontal: 15, borderRadius: 7, marginBottom: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Mobile Money</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>RWF 9,900</Text>
-                </View>
-            </TouchableOpacity>
+
+
+            {/* <FluterwavePaymentButton
+                user = {state.user}
+                _package = {_package}
+                paymentMethod = "Credit/Debit Card"
+                navigation = {navigation}
+                registerSubscription = {registerSubscription}
+                // registerSubscription = {({type, transactionId, paymentMode, price, currency, token})=>registerSubscription({type, transactionId, paymentMode, price, currency, token})}
+            /> */}
+
+            {/* <FluterwavePaymentButton
+                user = {state.user}
+                _package = {_package}
+                paymentMethod = "Mobile Money"
+                navigation = {navigation}
+                registerSubscription = {registerSubscription}
+            /> */}
+
+            <PayWithFlutterwave
+                onRedirect={(props)=>console.log(props)}
+                options={{
+                    tx_ref: Date.now().toString(),
+                    authorization: 'FLWPUBK-3138297073746401f7ecd92029c645fc-X',
+                    customer: {
+                    email: 'customer-email@example.com'
+                    },
+                    amount: 2000,
+                    currency: 'NGN',
+                    payment_options: 'mobilemoneyrwanda'
+                }}
+            />
         </ScrollView>
-        )
-    }
+    );
 }
+
+const styles = StyleSheet.create({})
 
 export default SubscriptionPay

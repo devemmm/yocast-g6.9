@@ -40,6 +40,7 @@ const signup = dispatch => async({names, email, phone, country, password}, callb
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
 }
+
 const signin = dispatch => async({email, password}, callback)=>{
     try {
         const response = await yocastApi.post('/signin', {email, password});
@@ -107,11 +108,28 @@ const fetchPodcasts = dispatch => async(token, callback)=>{
     }
 } 
 
+const registerSubscription = dispatch => async({type, transactionId, paymentMode, price, currency, token})=>{
+    try {
+        const response = await yocastApi.post('/user/subscription', {
+            type, transactionId, paymentMode, price, currency
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        console.log(response.data)
+
+    } catch (error) {
+        dispatch({type: 'add_error', payload: error.response.data.error.message})
+    }
+};
+
 const addErrorMessage = dispatch =>(error)=> dispatch({type: 'add_error', payload: error})
 const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'})
 
 export const { Context, Provider } = createDataContext(
     AuthReducer,
-    { signup, signin, signout, tryLocalSignin, addErrorMessage, clearErrorMessage, fetchPodcasts},
+    { signup, signin, signout, tryLocalSignin, registerSubscription, addErrorMessage, clearErrorMessage, fetchPodcasts},
     {user: null, token: null, errorMessage: '', podcasts:[] }
 )

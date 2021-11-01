@@ -1,8 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { useState} from 'react';
 import { View, Text, Image, TouchableOpacity, Linking, ScrollView, Alert,StyleSheet } from 'react-native';
-import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, StatusBarHeight, _grey } from '../../constants/constants';
+import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, _grey } from '../../constants/constants';
 
 const Subscription = ({navigation})=>{
+
 
   const [showPackageDetails, setShowPackageDetails] = useState(false);
   //  premium, standard, basic,
@@ -227,9 +228,10 @@ const Subscription = ({navigation})=>{
         </TouchableOpacity>
       </ScrollView>
       <View style={{ marginHorizontal: 15, marginVertical: 10 }}>
+
         <TouchableOpacity
-          // onPress={() => navigation.navigate("SubscriptionPay")}
-          onPress = {()=> openUrl('https://www.google.com')}
+          onPress={() => navigation.navigate("SubscriptionPay", {_package})}
+          // onPress = {()=> openUrl('https://www.google.com')}
 
           style={{
             backgroundColor: APP_ORANGE_COLOR,
@@ -275,6 +277,17 @@ const styles = StyleSheet.create({
     package_offer:{
         fontSize: 12,
         color: APP_WHITE_COLOR
+    },
+    paymentButton:{
+      backgroundColor: APP_ORANGE_COLOR,
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 50,
+      borderRadius: 10
+    },
+    paymentButtonText:{
+      color: APP_WHITE_COLOR,
+      fontSize: 20
     }
 })
 export default Subscription;
