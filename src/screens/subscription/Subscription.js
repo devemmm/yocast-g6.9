@@ -35,7 +35,7 @@ const Subscription = ({navigation})=>{
           paddingHorizontal: 15,
         }}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("ProfilePage")}
           style={{ flex: 0.25, paddingVertical: 5 }}>
           <Image
             source={require('../../../assets/arrow-left.png')}

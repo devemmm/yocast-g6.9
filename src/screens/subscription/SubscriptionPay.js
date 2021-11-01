@@ -14,7 +14,7 @@ const SubscriptionPay  = ({navigation, route})=>{
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
             <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("Subscription")} style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
                     <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30, tintColor: APP_WHITE_COLOR}} />
                 </TouchableOpacity>
                 <Text style={{flex: .5, textAlign: 'center', fontSize: 17, fontWeight: 'bold', color: APP_ORANGE_COLOR}}>Subscription</Text>

@@ -97,6 +97,7 @@ const fectchPodcast = async({token, todayDate, setPodcast, dispatchCategory, set
             setshowActivityIndicator(false);
         } 
     } catch (error) {
+        setNotSubscribedModal(true)
         setshowActivityIndicator(false)
     }
 }
@@ -105,12 +106,12 @@ const Home = ({navigation})=>{
     const {state } = useContext(DataContext);
     const { token, user } = state;
 
-    const [category, dispatchCategory ] = useReducer(categoryReducer, {Business: [],Education: [], Education: [], Politics: [], Music: [], Tech: [], TopExpensive: [], Popular: [], Trending: [], LatestRelease: []})
+    const [category, dispatchCategory ] = useReducer(categoryReducer, {Business: [],Education: [], Education: [], Politics: [], Music: [], Tech: [], TopExpensive: [], Popular: [], Trending: [], LatestRelease: [], Free: []})
     const [ todayDate, dispatchDate ] = useReducer(todayDateReducer, {hour: new Date().getHours(), today: '', month: ''});
     
     const [podcasts, setPodcast ] = useState([]);
     const [username, setUsername] = useState(user.names);
-    const [packages, setPackages] = useState([1,1,1]);
+    const [packages, setPackages] = useState([1,2,3]);
     const [tag, setTag] = useState('latest')
     const [ NotSubscribedModal, setNotSubscribedModal ] = useState(false);
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
@@ -121,7 +122,7 @@ const Home = ({navigation})=>{
         "https://yocast-api.nextreflexe.com/images/background/yocast.jpeg",
         "https://yocast-api.nextreflexe.com/images/background/yocast.jpeg",
         "https://yocast-api.nextreflexe.com/images/background/yocast.jpeg"
-    ])
+    ]);
 
     
 
@@ -151,7 +152,7 @@ const Home = ({navigation})=>{
                 <View style={{ flex: 1, backgroundColor: theme, justifyContent: 'center' }}>
                     <View
                         style={{ paddingHorizontal: 15, paddingBottom: 20}}>
-                        <Text style={{ color: '#fff', fontSize: 17, fontWeight: "bold", textAlign: "center" }}>You have no active subscriptions</Text> 
+                        <Text style={{ color: APP_ORANGE_COLOR, fontSize: 17, fontWeight: "bold", textAlign: "center" }}>You have no active subscriptions</Text> 
                     </View>
 
                     { packages.map((item, index) => {
@@ -159,10 +160,10 @@ const Home = ({navigation})=>{
                             <View key={index} style={{ marginHorizontal: 15, paddingVertical: 15, paddingHorizontal: 10, borderRadius: 5, marginBottom: 10, borderColor: '#ebebeb', borderWidth: 3}}>
                                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5}}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 12, color: "#fff" }}>
-                                        Welcome offer
+                                        Premium Package
                                     </Text>
                                     <Text style={{ fontWeight: 'bold', fontSize: 12, color: "#fff" }}>
-                                        then RWF 29,999/year
+                                        then $ 30.25/year
                                     </Text>
                                 </View>
 
@@ -176,8 +177,8 @@ const Home = ({navigation})=>{
 
                     <TouchableOpacity 
                         onPress={() => navigation.navigate("ProfileStackNavigation", { screen: "Subscription" })}
-                        style={{ backgroundColor: '#fff', height: 40, justifyContent: "center", alignItems: "center", marginHorizontal: 15, borderRadius: 3 }}>
-                        <Text>Subscribe</Text>
+                        style={{ backgroundColor: '#fff', height: 40, justifyContent: "center", alignItems: "center", marginHorizontal: 15, borderRadius: 3, backgroundColor: APP_ORANGE_COLOR }}>
+                        <Text style={{color: APP_WHITE_COLOR}}>Subscribe</Text>
                     </TouchableOpacity>
                 </View>
             </BottomSheet>
