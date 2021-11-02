@@ -20,7 +20,7 @@ const ForgotPasswordScreen = ({navigation})=>{
             </View>
             <View style={{ paddingHorizontal: 15, paddingTop: H * .05, width: '85%' }}>
                 <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Reset Password</Text>
-                <Text style={{ fontSize: 13, color: APP_WHITE_COLOR }}>Send the email address associated to this account and we will send you instructions to reset your password</Text>
+                <Text style={{ fontSize: 13, color: APP_WHITE_COLOR, marginTop: 10}}>Send the email address associated to this account and we will send you instructions to reset your password</Text>
             </View>
 
             <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>

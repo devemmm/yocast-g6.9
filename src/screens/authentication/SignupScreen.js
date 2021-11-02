@@ -1,10 +1,32 @@
 import React, { useState, useContext, useReducer } from 'react'
 import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { APP_ORANGE_COLOR,APP_BACKGROUND_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, W, _grey } from '../../constants/constants';
-import { signupReducer } from '../../context/AppContext';
 import { Context as AuthContext } from '../../context/AppContext'
+import validator from 'validator';
+import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
 
 
+const signupReducer = (state, action)=>{
+    switch(action.type){
+
+        case 'submitting':
+            return {...state, submitting: action.payload};
+        case 'names':
+            return {...state, names: action.payload};
+        case 'email':
+            return {...state, email: action.payload};
+        case 'phone':
+            return {...state, phone: action.payload};
+        case 'country':
+            return {...state, country: action.payload};
+        case 'password':
+            return {...state, password: action.payload};
+        case 'c_password':
+            return {...state, c_password: action.payload};
+        default:
+            return state;
+    }
+}
 const SignupScreen = ({navigation})=> {
     const [state, dispatch] = useReducer( signupReducer, {submitting: false, names: '', email: '', phone: '', country: '', password: '', c_password: ''})
     const { submitting, names, email, phone, country, password, c_password} = state;
@@ -21,7 +43,7 @@ const SignupScreen = ({navigation})=> {
             <ScrollView
                 contentContainerStyle={{}}>
                 <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingVertical: 5, paddingRight: 10 }}>
+                    <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")} style={{ paddingVertical: 5, paddingRight: 10 }}>
                         <Image source={require('../../../assets/arrow-left.png')} style={{ height: 30, width: 30, tintColor: APP_WHITE_COLOR }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")} style={{  paddingVertical: 5 }}>
@@ -30,22 +52,22 @@ const SignupScreen = ({navigation})=> {
                 </View>
                 <View style={{ paddingHorizontal: 15, paddingTop: H * .05, width: '80%' }}>
                     <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Create an account</Text>
-                    <Text style={{ fontSize: 13, color: APP_WHITE_COLOR }}>Create an account today and start enjoying your favorite podcasts</Text>
+                    <Text style={{ fontSize: 13, color: APP_WHITE_COLOR, marginTop: 10}}>Create an account today and start enjoying your favorite podcasts</Text>
                 </View>
 
                 <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: names.length > 4 || names.length ===0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             style={styles.txt_input} 
                             placeholder="Names"
                             autoCorrect = {false}
                             autoCapitalize = "none"
                             value={state.names}
-                            onChangeText={names => dispatch({ type: 'set_names', payload: names})}
+                            onChangeText={names => dispatch({ type: 'names', payload: names})}
                         />
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: validator.isEmail(email) || email.length == 0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             style={styles.txt_input} 
                             placeholder="Email"
@@ -53,13 +75,13 @@ const SignupScreen = ({navigation})=> {
                             autoCapitalize = "none"
                             value={state.email}
                             keyboardType="email-address"
-                            onChangeText={email => dispatch({ type: 'set_email', payload: email})}
+                            onChangeText={email => dispatch({ type: 'email', payload: email})}
                         />
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: phone.length > 10 || phone.length ===0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
-                            onChangeText={phone => dispatch({ type: 'set_phone', payload: phone})}
+                            onChangeText={phone => dispatch({ type: 'phone', payload: phone})}
                             value={state.phone}
                             keyboardType="phone-pad"
                             placeholder="Phone"
@@ -67,24 +89,24 @@ const SignupScreen = ({navigation})=> {
                         />
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: country.length > 4 || country.length ===0 ? '#fff': 'red', borderWidth: 1} ]}>
                         <TextInput
                             style={styles.txt_input} 
                             placeholder="country"
                             value={state.country}
-                            onChangeText={country => dispatch({ type: 'set_country', payload: country})}
+                            onChangeText={country => dispatch({ type: 'country', payload: country})}
                         />
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: password.length > 8 || password.length ===0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             style={styles.txt_input} 
                             placeholder="Password"
                             autoCapitalize = "none"
                             autoCorrect = {false}
-                            secureTextEntry
+                            secureTextEntry = {passwordVisibility}
                             value={state.password}
-                            onChangeText={password => dispatch({ type: 'set_password', payload: password})}
+                            onChangeText={password => dispatch({type: 'password', payload: password})}
                         />
                         <TouchableOpacity 
                             onPress={()=>passwordVisibility? setPasswordVisibility(false): setPasswordVisibility(true)}
@@ -94,15 +116,15 @@ const SignupScreen = ({navigation})=> {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.input_vw}>
+                    <View style={[styles.input_vw, {borderColor: c_password.length > 8 || c_password.length ===0 ? '#fff': 'red', borderWidth: 1}]}>
                         <TextInput
                             style={styles.txt_input} 
                             placeholder="Confirm Password"
                             autoCapitalize = "none"
                             autoCorrect = {false}
-                            secureTextEntry
+                            secureTextEntry = {passwordVisibility}
                             value={state.c_password}
-                            onChangeText={c_password => dispatch({ type: 'set_c_password', payload: c_password})}
+                            onChangeText={c_password => dispatch({ type: 'c_password', payload: c_password})}
                         />
                         <TouchableOpacity 
                             onPress={()=>passwordVisibility? setPasswordVisibility(false): setPasswordVisibility(true)}
@@ -113,37 +135,40 @@ const SignupScreen = ({navigation})=> {
                     </View>
 
                     <TouchableOpacity 
+                        style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}
                         onPress={ () =>{
                             if(names === '' || email === '' || phone === '' || password === '' || c_password === ''){
-                                Alert.alert('Sorry!', 'Make sure you fill all the required info!')
+                                return Alert.alert('Sorry!', 'Make sure you fill all the required info!')
                             }
 
                             if(password !== '' && password !== c_password){
-                                Alert.alert("Sorry!", "Please make sure the passwords are the same.");
+                                return Alert.alert("Sorry!", "Please make sure the passwords are the same.");
                             }
 
-                            dispatch({type: 'submit', payload: true})
+                            if(!validator.isEmail(email)){
+                                return Alert.alert("Sorry!", "Please your email looks like incorrect");
+                            }
+
+                            if(password.length < 6){
+                                return Alert.alert("Sorry!", "Please your password is too short.");
+                            }
+
+                            dispatch({type: 'submitting', payload: true})
+                            
                             signup({names, email, phone, country, password}, ()=>{
-                                dispatch({type: 'submit', payload: true})
+                                dispatch({type: 'submitting', payload: false})
                                 navigation.navigate("InAppNavigation")
-                            })
-                        }       
-                    } 
-                    style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+                            });
+                        }} 
+                    >
                         <Text style={{ color: bright, fontSize: 16 }}>Continue</Text>
                     </TouchableOpacity>
+
                     <View style={{ marginBottom: H * .1 }} />
-
                 </View>
-
             </ScrollView>
             {submitting ?
-                <View
-                    style={{ position: 'absolute', width: W, backgroundColor: '#fc5603', height: H, top: 0, flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                    >
-                    <ActivityIndicator size="large" color="#fff" />
-                    <Text style={{ marginTop: 15, fontSize: 13, fontWeight: 'bold', color:"#fff" }}>We are creating your account...</Text>
-                </View> 
+                <AppActivityIndictor2 activity= "We are creating your account..."/>
                 : 
                 null 
             }

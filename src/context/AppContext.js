@@ -41,8 +41,9 @@ const signup = dispatch => async({names, email, phone, country, password}, callb
     }
 }
 
-const signin = dispatch => async({email, password}, callback)=>{
+const signin = dispatch => async({email, password, setSubmitting}, callback)=>{
     try {
+        setSubmitting(true);
         const response = await yocastApi.post('/signin', {email, password});
         const { message, status, statusCode, user }  = response.data;
 
@@ -50,8 +51,10 @@ const signin = dispatch => async({email, password}, callback)=>{
         dispatch({type: 'signin', payload: {user, token: user.token.token}})
 
         // call a callback function  if everything goes well
+        setSubmitting(false)
         callback ? callback(): null
     } catch (error) {
+        setSubmitting(false)
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
 }

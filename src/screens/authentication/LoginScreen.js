@@ -3,6 +3,8 @@ import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, 
 import { bright, H, W, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR, APP_WHITE_COLOR } from '../../constants/constants';
 import { Context as AuthContext } from '../../context/AppContext';
 import validator from 'validator';
+import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
+
 
 const LoginScreen = ({navigation})=>{
 
@@ -75,7 +77,7 @@ const LoginScreen = ({navigation})=>{
 
                         onPress={() => {
                                 email=== "" || password === "" ? Alert.alert("Error", "Please provide Email and Password") :
-                                signin({email, password}, ()=>{
+                                signin({email, password, setSubmitting}, ()=>{
                                     navigation.navigate("InAppNavigation");
                                 })}
                             } 
@@ -89,11 +91,7 @@ const LoginScreen = ({navigation})=>{
             </ScrollView>
 
             {submitting ?
-                <View
-                    style={{ position: 'absolute', width: W, height: H, backgroundColor: '#fc5603', bottom: 0, top: 0, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator size="large" color="#fff" />
-                    <Text style={{ marginTop: 15, fontSize: 13, fontWeight: 'bold', color:"#fff" }}>Loging you in...</Text>
-                </View> 
+                <AppActivityIndictor2 activity = "Loging you in..."/>
                 : 
                 null
             }
