@@ -15,6 +15,20 @@ const ProfilePage  = ({navigation})=>{
     const [names, setNames] = useState('')
 
     const [activityIndicator, setActivityIndicator] = useState(false);
+
+
+    const PropsToEditProfile = () => {
+        var data = {
+            names: state.user.names,
+            phone: state.user.phone,
+            email: state.user.email,
+            avatar: state.user.avatar,
+            token: state.user.token.token
+        }
+        navigation.navigate("EditProfile", {item: data});
+    }
+
+
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <View style={{ paddingHorizontal: 15, height: H*.1,justifyContent: 'center' }}>
@@ -24,7 +38,8 @@ const ProfilePage  = ({navigation})=>{
             <View style={{ paddingVertical: 10, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center' }}>
                 <Image source={{ uri: "https://yocast-api.nextreflexe.com/images/background/yocast.jpeg" }} style={{ width: 80, height: 80, borderRadius: 50, resizeMode: 'cover' }} />
                 <View style={{ marginLeft: 20, flex: 1 }}>
-                    <Text numberOfLines={1} style={{ fontSize: 16, marginBottom: 10, fontWeight: 'bold', textTransform: 'capitalize', color: APP_WHITE_COLOR }}>{state.user.email}</Text>
+                    <Text numberOfLines={1} style={{ fontSize: 16, marginBottom: 10, fontWeight: 'bold', textTransform: 'capitalize', color: APP_WHITE_COLOR }}>{state.user.names}</Text>
+                    <Text numberOfLines={1} style={{ fontSize: 16, marginBottom: 10, fontWeight: 'bold', color: APP_WHITE_COLOR }}>{state.user.email}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ backgroundColor: '#000', color: bright, paddingHorizontal: 10, paddingVertical: 2, borderRadius: 3, fontSize: 12 }}>Premium</Text>
                     </View>
@@ -33,11 +48,18 @@ const ProfilePage  = ({navigation})=>{
 
             <View style={{ paddingHorizontal: 15, paddingTop: 20 }}>
                 <TouchableOpacity  
+                    onPress={() => PropsToEditProfile()}  
+                    style={styles.profile_set}>
+                    <Text style={styles.haeder}>Edit Profile</Text>
+                    <Text style={styles.det}>Change my profile details</Text>
+                </TouchableOpacity>
+               
+                {/* <TouchableOpacity  
                 onPress={() => setEdit(true)}  
                 style={styles.profile_set}>
                     <Text style={styles.haeder}>Edit Profile</Text>
                     <Text style={styles.det}>Change my profile details</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity  onPress={() => navigation.navigate("Subscription")}  style={styles.profile_set}>
                     <Text style={styles.haeder}>Subscriptions</Text>

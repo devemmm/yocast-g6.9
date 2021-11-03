@@ -11,6 +11,7 @@ import LoginScreen from "./src/screens/authentication/LoginScreen";
 import ResetPassword from "./src/screens/authentication/ResetPassword";
 import SignupScreen from "./src/screens/authentication/SignupScreen";
 import ProfilePage from "./src/screens/main/ProfilePage";
+import EditProfile from "./src/screens/main/EditProfile";
 import SearchPage from "./src/screens/main/SearchPage";
 import SoundPlay from "./src/screens/main/SoundPlay";
 import Favorite from "./src/screens/main/Favorite";
@@ -88,6 +89,7 @@ const ProfileStackNavigation = () => {
   return (
     <StackNavigation.Navigator screenOptions={{ headerShown: false }}>
       <StackNavigation.Screen name="ProfilePage" component={ProfilePage} />
+      <StackNavigation.Screen name="EditProfile" component={EditProfile} />
       <StackNavigation.Screen name="Subscription" component={Subscription} />
       <StackNavigation.Screen name="SubscriptionPay" component={SubscriptionPay} />
     </StackNavigation.Navigator>

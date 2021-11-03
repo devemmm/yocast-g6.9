@@ -153,11 +153,26 @@ const forgotPassword = dispatch => async({email, setshowActivityIndicator }, cal
     }
 }
 
+const updateAccount = dispatch => async(updates, setshowActivityIndicator, callback)=>{
+    try {
+        setshowActivityIndicator(true);
+
+        console.log({updates})
+
+        setshowActivityIndicator(false);
+
+        callback? callback() : null;
+    } catch (error) {
+        setshowActivityIndicator(false);
+        dispatch({type: 'add_error', payload: error.response.data.error.message})
+    }
+}
+
 const addErrorMessage = dispatch =>(error)=> dispatch({type: 'add_error', payload: error})
 const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'})
 
 export const { Context, Provider } = createDataContext(
     AuthReducer,
-    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, addErrorMessage, clearErrorMessage, fetchPodcasts},
+    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, updateAccount, addErrorMessage, clearErrorMessage, fetchPodcasts},
     {user: null, token: null, errorMessage: '', podcasts:[] }
 )
