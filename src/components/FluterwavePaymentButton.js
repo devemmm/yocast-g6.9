@@ -23,21 +23,20 @@ const FluterwavePaymentButton = ({user, _package, paymentMethod, navigation, reg
                         //     currency: 'USD', 
                         //     token: token.token
                         // });
-                        console.log("OK")
+                        console.log("cancelled")
 
                         return navigation.navigate("HomeStackNavigation");
 
                     case 'successful':
-                        // registerSubscription({
-                        //     type: 'monthly', 
-                        //     transactionId: tx_ref, 
-                        //     paymentMode: 'CARD', 
-                        //     price: 500, 
-                        //     currency: 'USD', 
-                        //     token: token.token
-                        // });
+                        registerSubscription({
+                            type: 'monthly', 
+                            transactionId: tx_ref, 
+                            paymentMode: 'CARD', 
+                            price: 500, 
+                            currency: 'USD', 
+                            token: token.token
+                        });
                         console.log("OKkk")
-
 
                         return navigation.navigate("HomeStackNavigation");
 

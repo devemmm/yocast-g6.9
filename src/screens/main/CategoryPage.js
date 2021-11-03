@@ -86,10 +86,7 @@ export class CategoryPage extends Component {
                                     key={index} 
                                     style={{ width: (W * .5) - 15 , marginHorizontal: 5 ,marginVertical: 7 }}>
                                         <Image source={{ uri: item.cover }} style={{  height: (W * .4) - 15, borderRadius: 5, resizeMode: 'cover' }}  />
-                                        { item.isFree === 0 && 
-                                        <View style={{ position: 'absolute', backgroundColor: 'green', paddingVertical: 3, paddingHorizontal: 7, top: 5, borderTopRightRadius: 3, borderBottomRightRadius: 3  }}>
-                                            <Text style={{ color: 'white', fontSize: 10 }}>RWF {item.price}</Text>
-                                        </View> }
+                                        
                                         <Text numberOfLines={3} style={styles.podcast_name}>{item.name}</Text>
                                         <Text style={styles.podcast_owner}>{item.ownerName}</Text>
                                     </TouchableOpacity>

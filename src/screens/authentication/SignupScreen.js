@@ -8,9 +8,6 @@ import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
 
 const signupReducer = (state, action)=>{
     switch(action.type){
-
-        case 'submitting':
-            return {...state, submitting: action.payload};
         case 'names':
             return {...state, names: action.payload};
         case 'email':
@@ -28,9 +25,11 @@ const signupReducer = (state, action)=>{
     }
 }
 const SignupScreen = ({navigation})=> {
-    const [state, dispatch] = useReducer( signupReducer, {submitting: false, names: '', email: '', phone: '', country: '', password: '', c_password: ''})
-    const { submitting, names, email, phone, country, password, c_password} = state;
+    const [state, dispatch] = useReducer( signupReducer, { names: '', email: '', phone: '', country: '', password: '', c_password: ''})
+    const { names, email, phone, country, password, c_password} = state;
     
+    const [submitting, setSubmitting ] = useState(false);
+
     const[passwordVisibility, setPasswordVisibility] = useState(true);
     const signup = useContext(AuthContext).signup;
 
@@ -153,10 +152,7 @@ const SignupScreen = ({navigation})=> {
                                 return Alert.alert("Sorry!", "Please your password is too short.");
                             }
 
-                            dispatch({type: 'submitting', payload: true})
-                            
-                            signup({names, email, phone, country, password}, ()=>{
-                                dispatch({type: 'submitting', payload: false})
+                            signup({names, email, phone, country, password, setSubmitting}, ()=>{
                                 navigation.navigate("InAppNavigation")
                             });
                         }} 
@@ -167,6 +163,8 @@ const SignupScreen = ({navigation})=> {
                     <View style={{ marginBottom: H * .1 }} />
                 </View>
             </ScrollView>
+
+           
             {submitting ?
                 <AppActivityIndictor2 activity= "We are creating your account..."/>
                 : 

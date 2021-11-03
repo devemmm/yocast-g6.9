@@ -26,35 +26,21 @@ const SubscriptionPay  = ({navigation, route})=>{
             </View>
 
 
-            {/* <FluterwavePaymentButton
+            <FluterwavePaymentButton
                 user = {state.user}
                 _package = {_package}
                 paymentMethod = "Credit/Debit Card"
                 navigation = {navigation}
                 registerSubscription = {registerSubscription}
                 // registerSubscription = {({type, transactionId, paymentMode, price, currency, token})=>registerSubscription({type, transactionId, paymentMode, price, currency, token})}
-            /> */}
+            />
 
-            {/* <FluterwavePaymentButton
+            <FluterwavePaymentButton
                 user = {state.user}
                 _package = {_package}
                 paymentMethod = "Mobile Money"
                 navigation = {navigation}
                 registerSubscription = {registerSubscription}
-            /> */}
-
-            <PayWithFlutterwave
-                onRedirect={(props)=>console.log(props)}
-                options={{
-                    tx_ref: Date.now().toString(),
-                    authorization: 'FLWPUBK-3138297073746401f7ecd92029c645fc-X',
-                    customer: {
-                    email: 'customer-email@example.com'
-                    },
-                    amount: 2000,
-                    currency: 'NGN',
-                    payment_options: 'mobilemoneyrwanda'
-                }}
             />
         </ScrollView>
     );

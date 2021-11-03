@@ -25,8 +25,9 @@ const AuthReducer = (state, action)=>{
     }
 }
 
-const signup = dispatch => async({names, email, phone, country, password}, callback)=>{
+const signup = dispatch => async({names, email, phone, country, password, setSubmitting}, callback)=>{
     try {
+        setSubmitting(true);
         const response = await yocastApi.post('/signup', { names, email, phone, country, password});
         const { message, status, statusCode, user }  = response.data;
         
@@ -34,9 +35,11 @@ const signup = dispatch => async({names, email, phone, country, password}, callb
         dispatch({type: 'signin', payload: {user, token: user.token.token}})
 
         // call a callback function  if everything goes well
+        setSubmitting(false);
         callback ? callback(): null
 
     } catch (error) {
+        setSubmitting(false);
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
 }
@@ -71,10 +74,11 @@ const tryLocalSignin = dispatch => async({navigation})=>{
     }
   }
 
-const signout = dispatch => async(token, callback)=>{
+const signout = dispatch => async(token, setActivityIndicator,  callback, )=>{
     try {
+        setActivityIndicator(true);
+        await AsyncStorage.removeItem('@USERDATA');
         const response = await yocastApi.post('/user/signout', {
-            //yo bro you can parse some body here ..
         },{
             headers: {
                 Authorization: `Bearer ${token}`
@@ -87,9 +91,11 @@ const signout = dispatch => async(token, callback)=>{
         
         // dispatch({type: 'signout'})
 
+        setActivityIndicator(false)
         //call calback function if exist
         callback ? callback() : null;
     } catch (error) {
+        setActivityIndicator(false)
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
 }
@@ -128,11 +134,30 @@ const registerSubscription = dispatch => async({type, transactionId, paymentMode
     }
 };
 
+const forgotPassword = dispatch => async({email, setshowActivityIndicator }, callback)=>{
+    try {
+        setshowActivityIndicator(true);
+        const response = await yocastApi.post('/users/forgotpassword', {
+            email
+        });
+        console.log(response.data);
+
+        setshowActivityIndicator(false);
+
+        callback? callback() : null;
+    } catch (error) {
+
+        console.log(error.response.data.error.message);
+        setshowActivityIndicator(false);
+        dispatch({type: 'add_error', payload: error.response.data.error.message})
+    }
+}
+
 const addErrorMessage = dispatch =>(error)=> dispatch({type: 'add_error', payload: error})
 const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'})
 
 export const { Context, Provider } = createDataContext(
     AuthReducer,
-    { signup, signin, signout, tryLocalSignin, registerSubscription, addErrorMessage, clearErrorMessage, fetchPodcasts},
+    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, addErrorMessage, clearErrorMessage, fetchPodcasts},
     {user: null, token: null, errorMessage: '', podcasts:[] }
 )

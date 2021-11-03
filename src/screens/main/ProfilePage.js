@@ -1,30 +1,20 @@
-import React, { Component, useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, StatusBarHeight, _grey } from '../../constants/constants'
 import { BottomSheet } from 'react-native-btr';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import serverConfig from '../../constants/server.json';
 import { Context as DataContext } from '../../context/AppContext';
-
-
+import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
 
 const ProfilePage  = ({navigation})=>{
 
     const {state, signout, fetchPodcasts} = useContext(DataContext);
 
-    useEffect(()=>{
-        // console.log(state.user)
-    })
-
-
-
     const [about, setAbout] = useState(false)
     const [terms, setterms] = useState(false)
     const [edit, setEdit] = useState(false)
-    const [username, setUsername] = useState('Loading...')
-    const [token, setToken] = useState('')
-    
     const [names, setNames] = useState('')
+
+    const [activityIndicator, setActivityIndicator] = useState(false);
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <View style={{ paddingHorizontal: 15, height: H*.1,justifyContent: 'center' }}>
@@ -80,7 +70,7 @@ const ProfilePage  = ({navigation})=>{
                 <TouchableOpacity
                     style={styles.profile_set}
                     onPress={() =>{
-                        signout(state.user.token.token, ()=>{
+                        signout(state.user.token.token, setActivityIndicator, ()=>{
                             navigation.navigate("LoginScreen");
                         })
                     }} 
@@ -212,6 +202,12 @@ Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage pro
                 </View>
 
             </BottomSheet>
+
+            {
+                activityIndicator ? 
+                <AppActivityIndictor2 activity = "Signout ..."/> :
+                null
+            }
         </ScrollView>
     )
 }

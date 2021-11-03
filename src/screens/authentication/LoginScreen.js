@@ -8,7 +8,7 @@ import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
 
 const LoginScreen = ({navigation})=>{
 
-    const {state, signin} = useContext(AuthContext)
+    const {state, signin, addErrorMessage} = useContext(AuthContext)
 
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
@@ -76,6 +76,14 @@ const LoginScreen = ({navigation})=>{
                         style={styles.signinBtn}
 
                         onPress={() => {
+                                if(!validator.isEmail(email)){
+                                    return addErrorMessage("Wrong email")
+                                }
+
+                                if(password.length < 6 ){
+                                    return addErrorMessage("incorrect password")
+                                }
+
                                 email=== "" || password === "" ? Alert.alert("Error", "Please provide Email and Password") :
                                 signin({email, password, setSubmitting}, ()=>{
                                     navigation.navigate("InAppNavigation");
@@ -123,7 +131,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     errorMessage:{
-        color: 'red', 
+        color: APP_ORANGE_COLOR, 
         alignSelf: 'center',
         fontSize: 18, 
         marginBottom: 20,

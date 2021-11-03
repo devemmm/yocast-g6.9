@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import isEmail from 'validator/lib/isEmail';
+import { BottomSheet } from 'react-native-btr';
+import { Context as AuthContext } from '../../context/AppContext';
+import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 
 const ForgotPasswordScreen = ({navigation})=>{
 
     const [email, setEmail] = useState('')
+    const [showActivityIndicator, setshowActivityIndicator] = useState(false);
+    const { state, forgotPassword } = useContext(AuthContext);
 
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
@@ -36,13 +41,19 @@ const ForgotPasswordScreen = ({navigation})=>{
                     />
                 </View>
 
-                <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")} style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity 
+                    style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => forgotPassword({email, setshowActivityIndicator}, ()=>navigation.navigate("ResetPassword"))} 
+                  >
                     <Text style={{ color: bright, fontSize: 16 }}>Send Instructions</Text>
                 </TouchableOpacity>
                 <View style={{ marginBottom: H * .1 }} />
 
             </View>
-            
+
+            <BottomSheet visible = {showActivityIndicator}>
+                <AppActivityIndictor/>
+            </BottomSheet>
         </ScrollView>
     )
 }
