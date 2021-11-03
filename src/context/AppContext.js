@@ -17,7 +17,13 @@ const AuthReducer = (state, action)=>{
             return { ...state, errorMessage: ''}
         case 'add_error':
             return { ...state, errorMessage: action.payload}
+        case 'add_successMessage':
+            return { ...state, successMessage: action.payload}
 
+        case 'OTP':
+            return {...state, OTP: action.payload}
+        case 'emailToReset':
+            return {...state, emailToReset: action.payload}
         case 'add_podcasts':
             return {...state, podcasts: action.payload}
         default: 
@@ -127,8 +133,6 @@ const registerSubscription = dispatch => async({type, transactionId, paymentMode
             }
         });
 
-        console.log(response.data)
-
     } catch (error) {
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
@@ -140,14 +144,56 @@ const forgotPassword = dispatch => async({email, setshowActivityIndicator }, cal
         const response = await yocastApi.post('/users/forgotpassword', {
             email
         });
-        console.log(response.data);
+        const {status, statusCode, OTP} = response.data;
 
+        if(status === "successfull" && statusCode === 200){
+            dispatch({type: 'emailToReset', payload: email})
+        }
         setshowActivityIndicator(false);
-
         callback? callback() : null;
     } catch (error) {
+        setshowActivityIndicator(false);
+        dispatch({type: 'add_error', payload: error.response.data.error.message})
+    }
+}
 
-        console.log(error.response.data.error.message);
+const verfiyOTP = dispatch => async({email, type, otp, setshowActivityIndicator}, callback)=>{
+    try {
+        setshowActivityIndicator(true)
+        const response = await yocastApi.get(`/users/check/otp/${email}/${type}/${otp}`);
+        
+        const { message, OTP, status, statusCode } = response.data;
+
+        if(statusCode == 200 && message === 'valid OTP'){
+            dispatch({type: 'OTP', payload: OTP})
+        }
+
+        setshowActivityIndicator(false)
+        callback ? callback() : null
+    } catch (error) {
+        setshowActivityIndicator(false);
+        dispatch({type: 'add_error', payload: error.response.data.error.message})
+    }
+}
+
+const resetPassword = dispatch => async({email, password, OTP, setshowActivityIndicator}, callback)=>{
+    try {
+        setshowActivityIndicator(true);
+        const response = await yocastApi.post('/users/reset/password', {
+            email,
+            password,
+            OTP
+        });
+
+        const {message, status, statusCode} = response.data;
+
+        setshowActivityIndicator(false);
+        if(statusCode === 200 && status === "successfull"){
+            callback? callback() : null;
+            console.log("let mE CALL", message)
+            dispatch({type: 'add_successMessage', payload: message})
+        }
+    } catch (error) {
         setshowActivityIndicator(false);
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
@@ -173,6 +219,6 @@ const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'})
 
 export const { Context, Provider } = createDataContext(
     AuthReducer,
-    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, updateAccount, addErrorMessage, clearErrorMessage, fetchPodcasts},
-    {user: null, token: null, errorMessage: '', podcasts:[] }
+    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, verfiyOTP, resetPassword, updateAccount, addErrorMessage, clearErrorMessage, fetchPodcasts},
+    {user: null, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
 )

@@ -1,16 +1,15 @@
 import React, { useState, useContext } from 'react'
 import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
-import isEmail from 'validator/lib/isEmail';
 import { BottomSheet } from 'react-native-btr';
 import { Context as AuthContext } from '../../context/AppContext';
 import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 
-const ForgotPasswordScreen = ({ navigation }) => {
-
-    const [email, setEmail] = useState('')
+const OtpConfirmation = ({navigation}) => {
+    const [otp, setOtp] = useState('');
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
-    const { state, forgotPassword } = useContext(AuthContext);
+    const { state, verfiyOTP, addErrorMessage, clearErrorMessage  } = useContext(AuthContext);
+    const { errorMessage, OTP, emailToReset } = state;
 
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
@@ -24,28 +23,38 @@ const ForgotPasswordScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <View style={{ paddingHorizontal: 15, paddingTop: H * .05, width: '85%' }}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Reset Password</Text>
-                <Text style={{ fontSize: 13, color: APP_WHITE_COLOR, marginTop: 10 }}>Send the email address associated to this account and we will send you instructions to reset your password</Text>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>OTP Verfication</Text>
+                <Text style={{ fontSize: 13, color: APP_WHITE_COLOR, marginTop: 10 }}>Check the OTP code on your email address and submit it here</Text>
             </View>
 
             <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>
 
-                <View style={[styles.input_vw, { borderColor: isEmail(email) || email.length === 0 ? '#fff' : 'red', borderWidth: 1 }]}>
+                <View style={[styles.input_vw, { borderColor: otp.length === 4 || otp.length === 0 ? '#fff' : 'red', borderWidth: 1 }]}>
                     <TextInput
                         style={styles.txt_input}
-                        placeholder="Email"
+                        placeholder="OTP-code"
                         autoCapitalize="none"
                         autoCorrect={false}
-                        value={email}
-                        onChangeText={(email) => setEmail(email)}
+                        value={otp}
+                        keyboardType="number-pad"
+                        maxLength = {4}
+                        onChangeText={(otp) => {
+                            clearErrorMessage();
+                            setOtp(otp)
+                        }}
                     />
                 </View>
-
+                {state.errorMessage ? <Text style={{color: 'red', alignSelf: 'center', fontSize: 16, marginBottom: 10}}>{errorMessage}</Text> : null}
                 <TouchableOpacity
                     style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}
-                    onPress={() => forgotPassword({ email, setshowActivityIndicator }, () => navigation.navigate("OtpVerfication"))}
+                    onPress={() => {
+                        if(otp.length !== 4){
+                            return addErrorMessage("wrong OTP - CODE")
+                        }
+                        verfiyOTP({ email: emailToReset, type: 'otpCode', otp, setshowActivityIndicator }, () => navigation.navigate("ResetPassword"))
+                    }}
                 >
-                    <Text style={{ color: bright, fontSize: 16 }}>Send Instructions</Text>
+                    <Text style={{ color: bright, fontSize: 16 }}>Continue</Text>
                 </TouchableOpacity>
                 <View style={{ marginBottom: H * .1 }} />
 
@@ -59,7 +68,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    input_vw: {
+    input_vw : {
         backgroundColor: '#ebebeb',
         flexDirection: 'row',
         height: 43,
@@ -71,7 +80,6 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16
     }
-});
+})
 
-export default ForgotPasswordScreen
-
+export default OtpConfirmation

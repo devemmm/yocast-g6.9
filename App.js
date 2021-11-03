@@ -8,6 +8,7 @@ import { Image, View } from "react-native";
 import { Provider as AppProvider } from './src/context/AppContext';
 import ForgotPasswordScreen from "./src/screens/authentication/ForgotPasswordScreen";
 import LoginScreen from "./src/screens/authentication/LoginScreen";
+import OtpVerfication from "./src/screens/authentication/OtpVerfication";
 import ResetPassword from "./src/screens/authentication/ResetPassword";
 import SignupScreen from "./src/screens/authentication/SignupScreen";
 import ProfilePage from "./src/screens/main/ProfilePage";
@@ -40,6 +41,7 @@ const AuthenticationFlow = () => {
       <StackNavigation.Screen name="LoginScreen" component={LoginScreen} />
       <StackNavigation.Screen name="SignupScreen" component={SignupScreen} />
       <StackNavigation.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen}/>
+      <StackNavigation.Screen name="OtpVerfication" component={OtpVerfication}/>
       <StackNavigation.Screen name="ResetPassword" component={ResetPassword} />
       <StackNavigation.Screen name="SoundPlay" component={SoundPlay}/>
       <StackNavigation.Screen name="InAppNavigation" component={InAppNavigation} />
