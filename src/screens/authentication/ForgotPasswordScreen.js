@@ -1,19 +1,18 @@
 import React, { useState, useContext } from 'react'
-import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet } from 'react-native'
+import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet, ActivityIndicator, Button } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import isEmail from 'validator/lib/isEmail';
-import { BottomSheet } from 'react-native-btr';
 import { Context as AuthContext } from '../../context/AppContext';
 import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({navigation}) => {
 
     const [email, setEmail] = useState('')
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
     const { state, forgotPassword } = useContext(AuthContext);
 
     return (
-        <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
+        <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR}}>
             <StatusBar
                 animated={true}
                 backgroundColor={APP_BACKGROUND_COLOR}
@@ -27,7 +26,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
                 <Text style={{ fontSize: 22, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Reset Password</Text>
                 <Text style={{ fontSize: 13, color: APP_WHITE_COLOR, marginTop: 10 }}>Send the email address associated to this account and we will send you instructions to reset your password</Text>
             </View>
-
             <View style={{ paddingHorizontal: 15, paddingTop: H * .05 }}>
 
                 <View style={[styles.input_vw, { borderColor: isEmail(email) || email.length === 0 ? '#fff' : 'red', borderWidth: 1 }]}>
@@ -51,12 +49,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
             </View>
 
-            <BottomSheet visible={showActivityIndicator}>
-                <AppActivityIndictor />
-            </BottomSheet>
+            {showActivityIndicator ? <AppActivityIndictor/> : null}
         </ScrollView>
     )
 }
+
 
 const styles = StyleSheet.create({
     input_vw: {
@@ -73,5 +70,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ForgotPasswordScreen
 
+export default ForgotPasswordScreen

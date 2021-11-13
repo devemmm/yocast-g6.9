@@ -15,14 +15,14 @@ const FluterwavePaymentButton = ({user, _package, paymentMethod, navigation, reg
                 switch(status){
 
                     case 'cancelled':
-                        // registerSubscription({
-                        //     type: 'monthly', 
-                        //     transactionId: tx_ref, 
-                        //     paymentMode: 'CARD', 
-                        //     price: 500, 
-                        //     currency: 'USD', 
-                        //     token: token.token
-                        // });
+                        registerSubscription({
+                            type: 'monthly', 
+                            transactionId: tx_ref, 
+                            paymentMode: 'CARD', 
+                            price: 500, 
+                            currency: 'USD', 
+                            token: token.token
+                        });
                         console.log("cancelled")
 
                         return navigation.navigate("HomeStackNavigation");

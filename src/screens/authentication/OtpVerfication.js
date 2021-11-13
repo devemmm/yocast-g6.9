@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet } from 'react-native'
+import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, ActivityIndicator, StyleSheet } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import { BottomSheet } from 'react-native-btr';
 import { Context as AuthContext } from '../../context/AppContext';
@@ -59,10 +59,7 @@ const OtpConfirmation = ({navigation}) => {
                 <View style={{ marginBottom: H * .1 }} />
 
             </View>
-
-            <BottomSheet visible={showActivityIndicator}>
-                <AppActivityIndictor />
-            </BottomSheet>
+            {showActivityIndicator ? <AppActivityIndictor/> : null}
         </ScrollView>
     )
 }

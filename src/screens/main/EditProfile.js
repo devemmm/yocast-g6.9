@@ -1,7 +1,7 @@
 import React, { useReducer, useContext } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput, ActivityIndicator } from 'react-native'
 import ImagePicker from 'react-native-image-crop-picker';
-import { APP_BACKGROUND_COLOR, APP_WHITE_COLOR, StatusBarHeight, theme, W, _grey } from '../../constants/constants';
+import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, StatusBarHeight, theme, W, _grey } from '../../constants/constants';
 import PhoneInput from 'react-native-phone-number-input';
 import serverConfig from '../../constants/server.json';
 import { Context as AuthContext } from '../../context/AppContext';
@@ -15,6 +15,8 @@ const reducer = (state, action) => {
             return { ...state, avatar: action.payload };
         case 'names':
             return { ...state, names: action.payload }
+        case 'country':
+            return { ...state, country: action.payload }
         case 'phone':
             return { ...state, phone: action.payload };
         default:
@@ -112,6 +114,20 @@ const EditProfile = ({ navigation }) => {
                 </View>
 
                 <View style={{ marginVertical: 10, marginHorizontal: 15 }}>
+                    <Text style={{ color: APP_WHITE_COLOR, fontSize: 16 }}>Country: </Text>
+                    <View style={{ backgroundColor: '#ebebeb', flexDirection: 'row', height: 40, borderRadius: 3, paddingHorizontal: 10, marginTop: 10 }}>
+                        <TextInput
+                            value={country}
+                            onChangeText={country => dispatch({ type: 'country', payload: country })}
+                            keyboardType="default"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            placeholder="country"
+                            style={{ flex: 1, fontSize: 16 }} />
+                    </View>
+                </View>
+
+                <View style={{ marginVertical: 10, marginHorizontal: 15 }}>
                     <Text style={{ color: APP_WHITE_COLOR, fontSize: 16 }}>Phone: </Text>
                     <PhoneInput
                         defaultValue={phone}
@@ -142,7 +158,7 @@ const EditProfile = ({ navigation }) => {
                         // if()
                         console.log(phone, avatar)
                     }}
-                    style={{ backgroundColor: theme, height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginHorizontal: 15, marginVertical: 5 }}>
+                    style={{ backgroundColor: APP_ORANGE_COLOR, height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginHorizontal: 15, marginVertical: 5 }}>
                     <Text style={{ color: "#fff" }} >Save Changes</Text>
                 </TouchableOpacity>}
         </View>
