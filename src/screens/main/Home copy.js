@@ -1,5 +1,5 @@
 import React, { useReducer, useState, Component, useEffect, useContext } from 'react'
-import { View, Text, StatusBar, ScrollView, SliderBox, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { View, Text, StatusBar, ScrollView, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { BottomSheet } from 'react-native-btr'
 import { H, W, _grey, APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, theme } from '../../constants/constants'
@@ -212,7 +212,7 @@ const Home = ({ navigation }) => {
             {/* <SliderBox
                     autoplay={true}
                     circleLoop={true}
-                    images={banners}
+                    images={this.state.banners}
                     sliderBoxHeight={140} 
                     resizeMethod={'resize'}
                     resizeMode={'cover'}
@@ -253,19 +253,27 @@ const Home = ({ navigation }) => {
 
             <View style={{ marginTop: 10, marginHorizontal: 10, flexDirection: 'row' }}>
                 <TouchableOpacity
-                    onPress={() => {setTag("latest")}}
+                    onPress={() => {
+                        setTag("latest")
+                        // fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
+                    }}
                     style={{ backgroundColor: tag === "latest" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag === "latest" ? "#fff" : "#000" }}>Latest</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => { setTag("filtered")}}
+                    onPress={() => {
+                        setTag("filtered")
+                    }}
                     style={{ backgroundColor: tag === "filtered" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag === "filtered" ? "#fff" : "#000" }}>Filtered</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => { setTag("free")}}
+                    onPress={() => {
+                        setTag("free")
+                        // fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
+                    }}
                     style={{ backgroundColor: tag === "free" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag == "free" ? "#fff" : "#000" }}>Free</Text>
                 </TouchableOpacity>
@@ -289,6 +297,20 @@ const Home = ({ navigation }) => {
                         {category.Trending.length === 0 ? null :
                             <PodcastCategory category="Trending" title="Trending" podcasts={category.Trending} navigation={navigation} />
                         }
+
+                        <View style={{ display: 'none', marginHorizontal: 15, marginVertical: 15 }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Recently Played</Text>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
+                                <Image source={{ uri: 'https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTgwOTN8MHwxfHNlYXJjaHw5fHxtdXNpY3xlbnwwfHx8fDE2MjgxMDc0OTU&ixlib=rb-1.2.1&q=80&w=1080' }} style={{ width: W * .15, height: W * .15, borderRadius: 5, resizeMode: 'cover' }} />
+                                <View style={{ flex: 1, marginLeft: 15 }} >
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 'bold' }}>Ese birashoboka?</Text>
+                                        <Text numberOfLines={1} style={{ color: 'grey' }}>06:23</Text>
+                                    </View>
+                                    <Text numberOfLines={1} style={{ color: 'grey' }}>Episode #21</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
 
                         {category.TopExpensive.length === 0 ? null :
                             <PodcastCategory category="TopExpensive" title="Certified Platinum" podcasts={category.TopExpensive} navigation={navigation} />
