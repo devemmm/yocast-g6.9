@@ -1,10 +1,11 @@
-import React, { useReducer, useContext } from 'react'
+import React, { useReducer, useEffect, useState, useContext } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput, ActivityIndicator } from 'react-native'
 import ImagePicker from 'react-native-image-crop-picker';
-import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, StatusBarHeight, theme, W, _grey } from '../../constants/constants';
+import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, theme, W, _grey } from '../../constants/constants';
 import PhoneInput from 'react-native-phone-number-input';
-import serverConfig from '../../constants/server.json';
 import { Context as AuthContext } from '../../context/AppContext';
+import { AppActivityIndictor } from '../../components/AppActivityIndictor';
+import { ResponseModel } from '../../components/ResponseModel';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -23,40 +24,17 @@ const reducer = (state, action) => {
             return state;
     }
 }
-const EditProfile = ({ navigation }) => {
-
-    const [userData, dispatch] = useReducer(reducer, { username: '', token: null, names: "", phone: "", country: "", focusPhoneInput: false, email: "", saving: false, avatar: "https://yocast-api.nextreflexe.com/images/avatar/default-avatar.jpg", })
+const EditProfile = ({ navigation, route }) => {
+    const defautUserData = route.params.item;
+    const [userData, dispatch] = useReducer(reducer, { username: '', token: null, names: "", phone: "", country: "", focusPhoneInput: false, email: "", saving: false, avatar: defautUserData.avatar })
     const { username, token, names, phone, country, focusPhoneInput, email, saving, avatar } = userData
+    const [showActivityIndicator, setshowActivityIndicator] = useState(false);
 
-    const { state, updateAccount } = useReducer(AuthContext);
-    
-    const update = async (token) => {
-        try {
-            // this.setState({ saving: true});
+    // show success modal
+    const [successmodal, setuccessmodal] = useState(false);
 
-            var data = {
-                names: names,
-                phone: phone,
-                country: "RW"
-            }
 
-            const value = await fetch(`${serverConfig.restServer}/user/account`, {
-                method: "PATCH",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                },
-                body: JSON.stringify(data)
-            });
-            const response = await value.json();
-            console.log(token);
-            console.log(response);
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const { state, updateAccount } = useContext(AuthContext);
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -64,8 +42,8 @@ const EditProfile = ({ navigation }) => {
             height: 400,
             cropping: true,
         }).then(image => {
-            dispatch({type: 'avatar', payload: image.path})
-        });
+            dispatch({ type: 'avatar', payload: image.path })
+        }).catch(()=>console.log("canceld"));
     }
     const choosePhotoFromLibrary = () => {
         ImagePicker.openPicker({
@@ -73,8 +51,8 @@ const EditProfile = ({ navigation }) => {
             height: 400,
             cropping: true
         }).then(image => {
-            dispatch({type: 'avatar', payload: image.path})
-        });
+            dispatch({ type: 'avatar', payload: image.path })
+        }).catch(()=>console.log("Canceld"));
     }
 
     return (
@@ -90,7 +68,9 @@ const EditProfile = ({ navigation }) => {
                 keyboardShouldPersistTaps="handled">
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
-                    <Image source={{ uri: avatar }} style={{ width: 100, height: 100, borderRadius: 70, resizeMode: 'cover' }} />
+                    <TouchableOpacity onPress={takePhotoFromCamera}>
+                        <Image source={{ uri: avatar }} style={{ width: 100, height: 100, borderRadius: 70, resizeMode: 'cover' }} />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         onPress={choosePhotoFromLibrary}
                         style={{ paddingVertical: 5, marginTop: 10, backgroundColor: '#ebebeb', paddingHorizontal: 15, borderRadius: 3 }}>
@@ -108,7 +88,7 @@ const EditProfile = ({ navigation }) => {
                             autoCapitalize="none"
                             autoCorrect={false}
                             // autoFocus
-                            placeholder="Names"
+                            placeholder={state.user.names}
                             style={{ flex: 1, fontSize: 16 }} />
                     </View>
                 </View>
@@ -122,7 +102,7 @@ const EditProfile = ({ navigation }) => {
                             keyboardType="default"
                             autoCapitalize="none"
                             autoCorrect={false}
-                            placeholder="country"
+                            placeholder={state.user.country}
                             style={{ flex: 1, fontSize: 16 }} />
                     </View>
                 </View>
@@ -134,14 +114,14 @@ const EditProfile = ({ navigation }) => {
                         defaultCode="RW"
                         layout="first"
                         autoFocus={focusPhoneInput}
-                        style = {{fontSize: 20}}
+                        style={{ fontSize: 20 }}
                         flagButtonStyle={{ padding: 0, height: 30, margin: 0, marginHorizontal: 0 }}
                         containerStyle={{ paddingVertical: 5, flex: 1, marginTop: 15, borderRadius: 3, paddingHorizontal: 5, alignItems: 'center', padding: 0, width: W - 30, backgroundColor: '#ebebeb' }}
-                        // placeholder="712345678"
-                        textContainerStyle={{ paddingVertical: 0, backgroundColor: 'transparent',paddingHorizontal: 0}}
+                        placeholder={state.user.phone}
+                        textContainerStyle={{ paddingVertical: 0, backgroundColor: 'transparent', paddingHorizontal: 0 }}
                         textInputStyle={{ flex: 1, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0, backgroundColor: 'transparent', fontSize: 14 }}
                         codeTextStyle={{ fontSize: 16, paddingHorizontal: 0 }}
-                        onChangeFormattedText={phone => {dispatch({ type: 'phone', payload: phone })}}
+                        onChangeFormattedText={phone => { dispatch({ type: 'phone', payload: phone }) }}
                     />
                 </View>
 
@@ -154,15 +134,52 @@ const EditProfile = ({ navigation }) => {
                     <ActivityIndicator size="small" color="#fff" />
                 </View> :
                 <TouchableOpacity
-                    onPress={() =>{
-                        // if()
-                        console.log(phone, avatar)
+                    onPress={() => {
+                        const contextToUpdate = {}
+
+                        if (names.length !== 0) {
+                            contextToUpdate.names = names
+                        }
+
+                        if (country.length !== 0) {
+                            contextToUpdate.country = country
+                        }
+
+                        if (phone.length !== 0) {
+                            contextToUpdate.phone = phone
+                        }
+
+                        if(avatar !== "" && avatar !== state.user.avatar){
+                            contextToUpdate.avatar = avatar
+                        }
+
+                        if (Object.keys(contextToUpdate).length === 0) {
+                            return Alert.alert("Yocast system !!!", `Hello ${defautUserData.names}, let you know that there is nothing to updates because there is no change in  your profile information`);
+                        } else {
+                            updateAccount(contextToUpdate,
+                                setshowActivityIndicator, () => {
+                                    setuccessmodal(!successmodal);
+                                });
+                        }
                     }}
                     style={{ backgroundColor: APP_ORANGE_COLOR, height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginHorizontal: 15, marginVertical: 5 }}>
                     <Text style={{ color: "#fff" }} >Save Changes</Text>
-                </TouchableOpacity>}
+                </TouchableOpacity>
+            }
+
+            {showActivityIndicator ? <AppActivityIndictor /> : null}
+
+
+            {successmodal ? 
+                <ResponseModel 
+                    type = "Success"
+                    navigation = {navigation} 
+                    screen = "ProfilePage"
+                    message = {state.successMessage}
+                /> : null
+            }
         </View>
-    )
-}
+    );
+};
 
 export default EditProfile

@@ -68,13 +68,10 @@ const fectchPodcast = async ({ token, todayDate, setPodcast, dispatchCategory, s
             setNotSubscribedModal(true)
             setshowActivityIndicator(false);
 
-        } else if (status == "successfull" && subscription.length > 0 && (new Date((subscription[0].desactivationDate).toString()) >= new Date)) {
-            const activationDate = new Date((subscription[0].createdAt).toString());
-            const desactivationDate = new Date((subscription[0].desactivationDate).toString());
-
-            const remainingTime = desactivationDate.getTime() - activationDate.getTime();
+        } else if (status == "successfull" && subscription.length > 0 && (new Date(subscription[0].desactivationDate) >= new Date())) {
+            const desactivationDate = new Date(subscription[0].desactivationDate);
+            const remainingTime = desactivationDate - new Date();
             const remainingDays = remainingTime / (1000 * 3600 * 24)
-
             setRemainingDays(Math.floor(remainingDays));
 
             const response = await yocastApi.get('/podcasts', {
@@ -136,17 +133,21 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-        var currentTime = new Date();
-        var month = currentTime.getMonth() + 1;
-        var __month = month < 10 ? ("0" + month) : month;
-        var today = currentTime.getFullYear() + "-" + __month + "-" + currentTime.getDate();
-        var __monthly = currentTime.getFullYear() + "-" + __month + "-";
+        const unsubscribe = navigation.addListener('focus', ()=>{
+            var currentTime = new Date();
+            var month = currentTime.getMonth() + 1;
+            var __month = month < 10 ? ("0" + month) : month;
+            var today = currentTime.getFullYear() + "-" + __month + "-" + currentTime.getDate();
+            var __monthly = currentTime.getFullYear() + "-" + __month + "-";
+    
+            dispatchDate({ type: 'today', payload: today });
+            dispatchDate({ type: 'month', payload: __monthly });
+    
+            fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
+        }) 
+        return unsubscribe;
 
-        dispatchDate({ type: 'today', payload: today });
-        dispatchDate({ type: 'month', payload: __monthly });
-
-        fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
-    }, [])
+    }, [navigation])
 
 
     return (
@@ -185,7 +186,10 @@ const Home = ({ navigation }) => {
                     })}
 
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("ProfileStackNavigation", { screen: "Subscription" })}
+                        onPress={() => {
+                            setNotSubscribedModal(false);
+                            navigation.navigate("ProfileStackNavigation", { screen: "Subscription" })
+                        }}
                         style={{ backgroundColor: '#fff', height: 40, justifyContent: "center", alignItems: "center", marginHorizontal: 15, borderRadius: 3, backgroundColor: APP_ORANGE_COLOR }}>
                         <Text style={{ color: APP_WHITE_COLOR }}>Subscribe</Text>
                     </TouchableOpacity>
@@ -200,7 +204,7 @@ const Home = ({ navigation }) => {
                             "Good afternoon," :
                             todayDate.hour >= 18 && todayDate.hour < 24 ?
                                 "Good evening," : null
-                    } <Text style={{ textTransform: 'capitalize' }}> {username} </Text>
+                    } <Text style={{ textTransform: 'capitalize' }}> {state.user.names} </Text>
                 </Text>
                 <TouchableOpacity
                     onPress={() => showRemainingDays === "none" ? setShowRemainingDays("flex") : setShowRemainingDays("none")}

@@ -69,7 +69,7 @@ const signin = dispatch => async({email, password, setSubmitting}, callback)=>{
 }
 
 const tryLocalSignin = dispatch => async({navigation})=>{
-    const data = await AsyncStorage.getItem('@USERDATA')
+    const data = await AsyncStorage.getItem('@USERDATA');
     const user = JSON.parse(data)
   
     if(data){
@@ -203,12 +203,26 @@ const updateAccount = dispatch => async(updates, setshowActivityIndicator, callb
     try {
         setshowActivityIndicator(true);
 
-        console.log({updates})
+        const data = await AsyncStorage.getItem('@USERDATA')
+        const user = JSON.parse(data)
+
+        let response = await yocastApi.patch('/user/account', updates, {
+            headers: {
+                Authorization: `Bearer ${user.token.token}`
+            }
+        })
+        const {message, status } = response.data;
+        dispatch({type: 'add_successMessage', payload: message});
+
+        response.data.user.token = {token: user.token.token}
+        await AsyncStorage.setItem('@USERDATA', JSON.stringify(response.data.user));
+        dispatch({type: 'signin', payload: {user: response.data.user, token: response.data.user.token.token}});
 
         setshowActivityIndicator(false);
 
         callback? callback() : null;
     } catch (error) {
+        console.log(error.response.data.error.message   )
         setshowActivityIndicator(false);
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
