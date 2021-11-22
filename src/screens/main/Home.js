@@ -9,6 +9,7 @@ import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 import { PodcastList } from '../../components/PodcastList';
 import { FreePodcasts } from '../../components/FreePodcasts';
 import { PodcastCategory } from '../../components/PodcastCategory';
+import { SubscriptionModel } from '../../components/SubscriptionModel';
 
 const categoryReducer = (state, action) => {
 
@@ -116,8 +117,6 @@ const Home = ({ navigation }) => {
     const [todayDate, dispatchDate] = useReducer(todayDateReducer, { hour: new Date().getHours(), today: '', month: '' });
 
     const [podcasts, setPodcast] = useState([]);
-    const [username, setUsername] = useState(user.names);
-    const [packages, setPackages] = useState([1, 2, 3]);
     const [tag, setTag] = useState('latest')
     const [NotSubscribedModal, setNotSubscribedModal] = useState(false);
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
@@ -133,18 +132,18 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', ()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
             var currentTime = new Date();
             var month = currentTime.getMonth() + 1;
             var __month = month < 10 ? ("0" + month) : month;
             var today = currentTime.getFullYear() + "-" + __month + "-" + currentTime.getDate();
             var __monthly = currentTime.getFullYear() + "-" + __month + "-";
-    
+
             dispatchDate({ type: 'today', payload: today });
             dispatchDate({ type: 'month', payload: __monthly });
-    
+
             fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
-        }) 
+        })
         return unsubscribe;
 
     }, [navigation])
@@ -158,43 +157,11 @@ const Home = ({ navigation }) => {
             />
 
             {/* subscription modal */}
-            <BottomSheet visible={NotSubscribedModal}>
-                <View style={{ flex: 1, backgroundColor: theme, justifyContent: 'center' }}>
-                    <View
-                        style={{ paddingHorizontal: 15, paddingBottom: 20 }}>
-                        <Text style={{ color: APP_ORANGE_COLOR, fontSize: 17, fontWeight: "bold", textAlign: "center" }}>You have no active subscriptions</Text>
-                    </View>
-
-                    {packages.map((item, index) => {
-                        return (
-                            <View key={index} style={{ marginHorizontal: 15, paddingVertical: 15, paddingHorizontal: 10, borderRadius: 5, marginBottom: 10, borderColor: '#ebebeb', borderWidth: 3 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: "#fff" }}>
-                                        Premium Package
-                                    </Text>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: "#fff" }}>
-                                        then $ 30.25/year
-                                    </Text>
-                                </View>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 10, color: "#fff" }}>Save 72%</Text>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 10, color: "#fff" }}>12 months at RWF 2,420/mo</Text>
-                                </View>
-                            </View>
-                        )
-                    })}
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            setNotSubscribedModal(false);
-                            navigation.navigate("ProfileStackNavigation", { screen: "Subscription" })
-                        }}
-                        style={{ backgroundColor: '#fff', height: 40, justifyContent: "center", alignItems: "center", marginHorizontal: 15, borderRadius: 3, backgroundColor: APP_ORANGE_COLOR }}>
-                        <Text style={{ color: APP_WHITE_COLOR }}>Subscribe</Text>
-                    </TouchableOpacity>
-                </View>
-            </BottomSheet>
+            <SubscriptionModel 
+                navigation = {navigation}
+                NotSubscribedModal = {NotSubscribedModal}
+                setNotSubscribedModal = {()=>setNotSubscribedModal(!NotSubscribedModal)}
+            />
 
             <View style={{ paddingHorizontal: 15, height: H * .12, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
                 <Text style={{ fontSize: 17, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>
@@ -257,19 +224,19 @@ const Home = ({ navigation }) => {
 
             <View style={{ marginTop: 10, marginHorizontal: 10, flexDirection: 'row' }}>
                 <TouchableOpacity
-                    onPress={() => {setTag("latest")}}
+                    onPress={() => { setTag("latest") }}
                     style={{ backgroundColor: tag === "latest" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag === "latest" ? "#fff" : "#000" }}>Latest</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => { setTag("filtered")}}
+                    onPress={() => { setTag("filtered") }}
                     style={{ backgroundColor: tag === "filtered" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag === "filtered" ? "#fff" : "#000" }}>Filtered</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => { setTag("free")}}
+                    onPress={() => { setTag("free") }}
                     style={{ backgroundColor: tag === "free" ? theme : "#ebebeb", flex: 1, height: 35, alignItems: 'center', justifyContent: 'center', borderRadius: 3, marginHorizontal: 5 }}>
                     <Text style={{ color: tag == "free" ? "#fff" : "#000" }}>Free</Text>
                 </TouchableOpacity>
@@ -311,10 +278,10 @@ const Home = ({ navigation }) => {
                         }
 
                         <View style={{ height: 100 }} />
-                    </View> 
+                    </View>
                     :
-                    
-                    tag === "free" ? <FreePodcasts podcasts={category.Free} navigation={navigation}/> : null
+
+                    tag === "free" ? <FreePodcasts podcasts={category.Free} navigation={navigation} /> : null
             }
 
             <BottomSheet visible={showActivityIndicator}>

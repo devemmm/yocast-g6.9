@@ -26,6 +26,8 @@ const AuthReducer = (state, action)=>{
             return {...state, emailToReset: action.payload}
         case 'add_podcasts':
             return {...state, podcasts: action.payload}
+        case 'reset_context':
+            return { ...state, user: null, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
         default: 
             return state;
     }
@@ -38,6 +40,7 @@ const signup = dispatch => async({names, email, phone, country, password, setSub
         const { message, status, statusCode, user }  = response.data;
         
         await AsyncStorage.setItem('@USERDATA', JSON.stringify(user));
+        dispatch({type: 'reset_context'})
         dispatch({type: 'signin', payload: {user, token: user.token.token}})
 
         // call a callback function  if everything goes well
@@ -52,6 +55,7 @@ const signup = dispatch => async({names, email, phone, country, password, setSub
 
 const signin = dispatch => async({email, password, setSubmitting}, callback)=>{
     try {
+        dispatch({type: 'reset_context'})
         setSubmitting(true);
         const response = await yocastApi.post('/signin', {email, password});
         const { message, status, statusCode, user }  = response.data;
@@ -69,6 +73,7 @@ const signin = dispatch => async({email, password, setSubmitting}, callback)=>{
 }
 
 const tryLocalSignin = dispatch => async({navigation})=>{
+    dispatch({type: 'reset_context'})
     const data = await AsyncStorage.getItem('@USERDATA');
     const user = JSON.parse(data)
   
@@ -190,9 +195,9 @@ const resetPassword = dispatch => async({email, password, OTP, setshowActivityIn
         setshowActivityIndicator(false);
         if(statusCode === 200 && status === "successfull"){
             callback? callback() : null;
-            console.log("let mE CALL", message)
             dispatch({type: 'add_successMessage', payload: message})
         }
+        dispatch({type: 'reset_context'})
     } catch (error) {
         setshowActivityIndicator(false);
         dispatch({type: 'add_error', payload: error.response.data.error.message})

@@ -112,7 +112,7 @@ const setTabBarVisible = (route) => {
 const InAppNavigation = () => {
     return (
       <buttomTabNavigator.Navigator
-        initialRouteName="Feed"
+        initialRouteName="HomeStackNavigation"
         screenOptions={{
           tabBarActiveTintColor: "#e91e63",
           tabBarInactiveBackgroundColor: APP_BACKGROUND_COLOR,

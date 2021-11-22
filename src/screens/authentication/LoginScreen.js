@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { bright, H, W, _grey, APP_ORANGE_COLOR, APP_BACKGROUND_COLOR, APP_WHITE_COLOR } from '../../constants/constants';
 import { Context as AuthContext } from '../../context/AppContext';
@@ -8,13 +8,26 @@ import { AppActivityIndictor2 } from '../../components/AppActivityIndictor2';
 
 const LoginScreen = ({navigation})=>{
 
-    const {state, signin, addErrorMessage} = useContext(AuthContext)
+    const {state, signin, addErrorMessage, clearErrorMessage} = useContext(AuthContext)
 
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
     const[submitting, setSubmitting] = useState(false);
     const[passwordVisibility, setPasswordVisibility] = useState(true)
 
+    useEffect(()=>{
+        const unSubscribe = navigation.addListener('focus', ()=>{
+            clearErrorMessage();
+            clearTextField();
+        });
+
+        return unSubscribe
+    }, [navigation])
+
+    const clearTextField = ()=>{
+        setEmail('');
+        setPassword('')
+    }
     return (
         <View style ={ styles.container}>
             <StatusBar

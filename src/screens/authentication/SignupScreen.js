@@ -1,4 +1,4 @@
-import React, { useState, useContext, useReducer } from 'react'
+import React, { useState, useContext, useReducer, useEffect } from 'react'
 import { Image, ScrollView, TouchableOpacity, View, StatusBar, Text, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { APP_ORANGE_COLOR,APP_BACKGROUND_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, W, _grey } from '../../constants/constants';
 import { Context as AuthContext } from '../../context/AppContext'
@@ -20,6 +20,8 @@ const signupReducer = (state, action)=>{
             return {...state, password: action.payload};
         case 'c_password':
             return {...state, c_password: action.payload};
+        case 'reset_text_field':
+            return { ...state, names: '', email: '', phone: '', country: '', password: '', c_password: ''}
         default:
             return state;
     }
@@ -32,6 +34,17 @@ const SignupScreen = ({navigation})=> {
 
     const[passwordVisibility, setPasswordVisibility] = useState(true);
     const signup = useContext(AuthContext).signup;
+    const clearErrorMessage = useContext(AuthContext).clearErrorMessage
+
+    useEffect(() => {
+        const unSubscribe = navigation.addListener('focus', () => {
+            clearErrorMessage();
+            dispatch({type: 'reset_text_field'})
+
+        });
+
+        return unSubscribe
+    }, [navigation])
 
     return (
         <View style={{backgroundColor: APP_BACKGROUND_COLOR, flex: 1}}>

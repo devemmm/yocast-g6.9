@@ -3,6 +3,7 @@ import { Image, ScrollView, TouchableOpacity, View, Text, StatusBar, TextInput, 
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import { Context as AuthContext } from '../../context/AppContext';
 import { AppActivityIndictor } from '../../components/AppActivityIndictor';
+import { ResponseModel } from '../../components/ResponseModel';
 
 
 const ResetPassword = ({ navigation }) => {
@@ -12,8 +13,19 @@ const ResetPassword = ({ navigation }) => {
     const [passwordVisibility, setPasswordVisibility] = useState(true)
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
     const { state, resetPassword, addErrorMessage, clearErrorMessage } = useContext(AuthContext);
-    const { errorMessage, successMessage, OTP, emailToReset } = state;
+    const { errorMessage, OTP, emailToReset } = state;
+    const [successModel, setSuccessModel] = useState(false)
 
+    useEffect(() => {
+        const unSubscribe = navigation.addListener('focus', () => {
+            clearErrorMessage();
+            setPassword('')
+            setPassword_2('')
+            setshowActivityIndicator(false);
+        });
+
+        return unSubscribe
+    }, [navigation])
 
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
@@ -96,8 +108,7 @@ const ResetPassword = ({ navigation }) => {
                             OTP,
                             setshowActivityIndicator
                         }, () => {
-                            // Alert.alert(successMessage)
-                            navigation.navigate("LoginScreen")
+                            setSuccessModel(!successModel);
                         });
                     }}
                 >
@@ -107,6 +118,14 @@ const ResetPassword = ({ navigation }) => {
 
             </View>
             {showActivityIndicator ? <AppActivityIndictor/> : null}
+            {successModel ? 
+                <ResponseModel 
+                    type = "Success"
+                    navigation = {navigation} 
+                    screen = "LoginScreen"
+                    message = {state.successMessage}
+                /> : null
+            }
         </ScrollView>
     )
 }

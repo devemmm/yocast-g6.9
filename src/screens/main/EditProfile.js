@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useState, useContext } from 'react'
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert, TextInput, ActivityIndicator } from 'react-native'
 import ImagePicker from 'react-native-image-crop-picker';
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, theme, W, _grey } from '../../constants/constants';
 import PhoneInput from 'react-native-phone-number-input';

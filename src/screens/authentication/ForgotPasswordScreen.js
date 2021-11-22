@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, StyleSheet, ActivityIndicator, Button } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import isEmail from 'validator/lib/isEmail';
@@ -9,7 +9,16 @@ const ForgotPasswordScreen = ({navigation}) => {
 
     const [email, setEmail] = useState('')
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
-    const { state, forgotPassword } = useContext(AuthContext);
+    const { state, forgotPassword, clearErrorMessage } = useContext(AuthContext);
+
+    useEffect(()=>{
+        const unSubscribe = navigation.addListener('focus', ()=>{
+            clearErrorMessage();
+        });
+
+        return unSubscribe
+    }, [navigation])
+
 
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR}}>

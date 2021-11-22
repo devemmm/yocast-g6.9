@@ -1,15 +1,24 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Image, ScrollView, TouchableOpacity, StatusBar, View, Text, TextInput, ActivityIndicator, StyleSheet } from 'react-native'
 import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, primary, StatusBarHeight, _grey } from '../../constants/constants'
 import { BottomSheet } from 'react-native-btr';
 import { Context as AuthContext } from '../../context/AppContext';
 import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 
-const OtpConfirmation = ({navigation}) => {
+const OtpConfirmation = ({ navigation }) => {
     const [otp, setOtp] = useState('');
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
-    const { state, verfiyOTP, addErrorMessage, clearErrorMessage  } = useContext(AuthContext);
+    const { state, verfiyOTP, addErrorMessage, clearErrorMessage } = useContext(AuthContext);
     const { errorMessage, OTP, emailToReset } = state;
+
+    useEffect(() => {
+        const unSubscribe = navigation.addListener('focus', () => {
+            clearErrorMessage();
+            setOtp('')
+        });
+
+        return unSubscribe
+    }, [navigation])
 
     return (
         <ScrollView style={{ backgroundColor: APP_BACKGROUND_COLOR }}>
@@ -37,18 +46,18 @@ const OtpConfirmation = ({navigation}) => {
                         autoCorrect={false}
                         value={otp}
                         keyboardType="number-pad"
-                        maxLength = {4}
+                        maxLength={4}
                         onChangeText={(otp) => {
                             clearErrorMessage();
                             setOtp(otp)
                         }}
                     />
                 </View>
-                {state.errorMessage ? <Text style={{color: 'red', alignSelf: 'center', fontSize: 16, marginBottom: 10}}>{errorMessage}</Text> : null}
+                {state.errorMessage ? <Text style={{ color: 'red', alignSelf: 'center', fontSize: 16, marginBottom: 10 }}>{errorMessage}</Text> : null}
                 <TouchableOpacity
                     style={{ backgroundColor: APP_ORANGE_COLOR, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}
                     onPress={() => {
-                        if(otp.length !== 4){
+                        if (otp.length !== 4) {
                             return addErrorMessage("wrong OTP - CODE")
                         }
                         verfiyOTP({ email: emailToReset, type: 'otpCode', otp, setshowActivityIndicator }, () => navigation.navigate("ResetPassword"))
@@ -59,13 +68,13 @@ const OtpConfirmation = ({navigation}) => {
                 <View style={{ marginBottom: H * .1 }} />
 
             </View>
-            {showActivityIndicator ? <AppActivityIndictor/> : null}
+            {showActivityIndicator ? <AppActivityIndictor /> : null}
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
-    input_vw : {
+    input_vw: {
         backgroundColor: '#ebebeb',
         flexDirection: 'row',
         height: 43,
