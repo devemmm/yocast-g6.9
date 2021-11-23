@@ -27,7 +27,7 @@ const AuthReducer = (state, action)=>{
         case 'add_podcasts':
             return {...state, podcasts: action.payload}
         case 'reset_context':
-            return { ...state, user: null, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
+            return { ...state, user: {}, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
         default: 
             return state;
     }
@@ -98,10 +98,9 @@ const signout = dispatch => async(token, setActivityIndicator,  callback, )=>{
 
         if(response.data.status === "successfull"){
             await AsyncStorage.removeItem('@USERDATA');
+            dispatch({type: 'reset_context'})
         }
         
-        // dispatch({type: 'signout'})
-
         setActivityIndicator(false)
         //call calback function if exist
         callback ? callback() : null;

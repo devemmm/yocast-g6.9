@@ -1,17 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert, StyleSheet, Platform, TextInput } from 'react-native'
-import { APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, bright, H, StatusBarHeight, _grey } from '../../constants/constants'
-import { BottomSheet } from 'react-native-btr';
+import React, { useState, useContext } from 'react'
+import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet} from 'react-native'
+import { APP_BACKGROUND_COLOR, APP_WHITE_COLOR, bright, H, _grey } from '../../constants/constants'
 import { Context as DataContext } from '../../context/AppContext';
+import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 
 const ProfilePage = ({ navigation }) => {
 
-    const { state, signout, fetchPodcasts } = useContext(DataContext);
-    const [about, setAbout] = useState(false)
-    const [terms, setterms] = useState(false)
-    const [edit, setEdit] = useState(false)
-    const [names, setNames] = useState('')
-
+    const { state, signout } = useContext(DataContext);
     const [activityIndicator, setActivityIndicator] = useState(false);
 
 
@@ -58,17 +53,17 @@ const ProfilePage = ({ navigation }) => {
                     <Text style={styles.haeder}>Subscriptions</Text>
                     <Text style={styles.det}>Renew my subscription</Text>
                 </TouchableOpacity>
-              
+
                 <View style={{ height: 30 }} />
 
                 <TouchableOpacity
-                    onPress={() => setAbout(true)}
+                    onPress={() => navigation.navigate("AboutUsScreen")}
                     style={styles.profile_set}>
                     <Text style={styles.haeder}>About</Text>
                     <Text style={styles.det}>Know who we are</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => setterms(true)}
+                    onPress={() => navigation.navigate("TermAndPrivacy")}
                     style={styles.profile_set}>
                     <Text style={styles.haeder}>Terms and Conditions</Text>
                     <Text style={styles.det}>Important for both of us</Text>
@@ -94,127 +89,7 @@ const ProfilePage = ({ navigation }) => {
 
 
             </View>
-
-
-            <BottomSheet
-                visible={about}>
-                <View style={{ flex: 1, backgroundColor: APP_BACKGROUND_COLOR, paddingTop: Platform.OS === 'ios' ? StatusBarHeight : null }}>
-                    <ScrollView>
-                        <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                            <TouchableOpacity
-                                onPress={() => setAbout(false)}
-                                style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
-                                <Image source={require('../../../assets/arrow-left.png')} style={{ height: 28, width: 28, tintColor: APP_WHITE_COLOR }} />
-                            </TouchableOpacity>
-
-                            <View style={{ flex: .25 }} />
-                        </View>
-                        <View style={{ paddingHorizontal: 15, paddingTop: H * .03, paddingBottom: 20, width: '80%' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Hi, We are YoCast</Text>
-                        </View>
-
-                        <View style={{ marginHorizontal: 15 }}>
-                            <Text style={{ color: APP_WHITE_COLOR }}>Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-                            Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.
-                            Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-                            Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.
-                            Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.</Text>
-                        </View>
-
-                        <View style={{ height: H * .15 }} />
-
-
-                    </ScrollView>
-                </View>
-            </BottomSheet>
-
-
-            <BottomSheet
-                visible={terms}>
-                <View style={{ flex: 1, backgroundColor: APP_BACKGROUND_COLOR, paddingTop: Platform.OS === 'ios' ? StatusBarHeight : null }}>
-                    <ScrollView>
-                        <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                            <TouchableOpacity
-                                onPress={() => setterms(false)}
-                                style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
-                                <Image source={require('../../../assets/arrow-left.png')} style={{ height: 28, width: 28, tintColor: APP_WHITE_COLOR }} />
-                            </TouchableOpacity>
-
-                            <View style={{ flex: .25 }} />
-                        </View>
-                        <View style={{ paddingHorizontal: 15, paddingTop: H * .03, paddingBottom: 20, width: '80%' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>Read our terms carefuly</Text>
-                        </View>
-
-                        <View style={{ marginHorizontal: 15 }}>
-                            <Text style={{ color: APP_WHITE_COLOR }}>Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-                            Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.
-                            Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-                            Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.
-                            Like your lorem ipsum extra crispy? Then Bacon Ipsum is the placeholder text generator for you. Side of eggs and hashbrowns is optional, but recommended.
-
-Bacon ipsum dolor amet short ribs brisket venison rump drumstick pig sausage prosciutto chicken spare ribs salami picanha doner. Kevin capicola sausage, buffalo bresaola venison turkey shoulder picanha ham pork tri-tip meatball meatloaf ribeye. Doner spare ribs andouille bacon sausage. Ground round jerky brisket pastrami shank.</Text>
-                        </View>
-
-                        <View style={{ height: H * .15 }} />
-
-
-                    </ScrollView>
-                </View>
-            </BottomSheet>
-
-
-            <BottomSheet visible={edit}>
-                <View style={{ flex: 1, backgroundColor: APP_BACKGROUND_COLOR, paddingTop: Platform.OS === 'ios' ? StatusBarHeight : null }}>
-                    <ScrollView >
-                        <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15 }}>
-                            <TouchableOpacity onPress={() => setEdit(false)} style={{ flex: .25, paddingVertical: 5, paddingRight: 10 }}>
-                                <Image source={require('../../../assets/arrow-left.png')} style={{ height: 28, width: 28, tintColor: APP_WHITE_COLOR }} />
-                            </TouchableOpacity>
-                            <Text style={{ flex: .5, textAlign: 'center', fontSize: 17, fontWeight: 'bold', color: APP_WHITE_COLOR }}>Edit Profile</Text>
-                            <TouchableOpacity style={{ flex: .25, paddingVertical: 5 }}>
-                                <Text style={{ color: APP_ORANGE_COLOR, textAlign: 'right', fontSize: 17 }}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: H * .03 }}>
-                            <Image source={{ uri: "https://images.unsplash.com/photo-1530785602389-07594beb8b73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTgwOTN8MHwxfHNlYXJjaHwxMnx8YmxhY2slMjBmYWNlfGVufDB8fHx8MTYyODEwMDQ1Nw&ixlib=rb-1.2.1&q=80&w=1080" }} style={{ width: 120, height: 120, borderRadius: 70, resizeMode: 'cover' }} />
-                            <TouchableOpacity style={{ paddingVertical: 5, marginTop: 5 }}>
-                                <Text style={{ textAlign: 'right', fontSize: 16, color: APP_WHITE_COLOR }}>Change Photo</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{
-                            backgroundColor: '#ebebeb',
-                            flexDirection: 'row',
-                            height: 43,
-                            borderRadius: 3,
-                            paddingHorizontal: 10,
-                            marginHorizontal: 20,
-                            marginVertical: 30
-                        }}>
-                            <TextInput
-                                style={{ flex: 1, fontSize: 15 }}
-                                value={names}
-                                // autoFocus
-                                placeholder="Username"
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                onChangeText={(names) => setNames(names)}
-                            />
-                        </View>
-                    </ScrollView>
-                </View>
-
-            </BottomSheet>
-
-            { activityIndicator ? null : null }
+            { activityIndicator ? <AppActivityIndictor/> : null}
         </ScrollView>
     )
 }

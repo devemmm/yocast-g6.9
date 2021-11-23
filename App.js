@@ -12,6 +12,8 @@ import OtpVerfication from "./src/screens/authentication/OtpVerfication";
 import ResetPassword from "./src/screens/authentication/ResetPassword";
 import SignupScreen from "./src/screens/authentication/SignupScreen";
 import ProfilePage from "./src/screens/main/ProfilePage";
+import AboutUsScreen from './src/screens/main/AboutUsScreen';
+import TermAndPrivacy from './src/screens/main/TermAndPrivacy';
 import EditProfile from "./src/screens/main/EditProfile";
 import SearchPage from "./src/screens/main/SearchPage";
 import SoundPlay from "./src/screens/main/SoundPlay";
@@ -94,6 +96,8 @@ const ProfileStackNavigation = () => {
       <StackNavigation.Screen name="EditProfile" component={EditProfile} />
       <StackNavigation.Screen name="Subscription" component={Subscription} />
       <StackNavigation.Screen name="SubscriptionPay" component={SubscriptionPay} />
+      <StackNavigation.Screen name="AboutUsScreen" component={AboutUsScreen}/>
+      <StackNavigation.Screen name="TermAndPrivacy" component={TermAndPrivacy}/>
     </StackNavigation.Navigator>
   );
 };
