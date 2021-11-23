@@ -26,8 +26,10 @@ const AuthReducer = (state, action)=>{
             return {...state, emailToReset: action.payload}
         case 'add_podcasts':
             return {...state, podcasts: action.payload}
+        case 'update_subscription':
+            return {...state, subscription: action.payload}
         case 'reset_context':
-            return { ...state, user: {}, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
+            return { ...state, user: {}, token: null, errorMessage: '', successMessage: '', podcasts:[], subscription:[], OTP: '', emailToReset: ''}
         default: 
             return state;
     }
@@ -98,6 +100,7 @@ const signout = dispatch => async(token, setActivityIndicator,  callback, )=>{
 
         if(response.data.status === "successfull"){
             await AsyncStorage.removeItem('@USERDATA');
+            await AsyncStorage.removeItem("@YOCAST_SUB");
             dispatch({type: 'reset_context'})
         }
         
@@ -105,6 +108,7 @@ const signout = dispatch => async(token, setActivityIndicator,  callback, )=>{
         //call calback function if exist
         callback ? callback() : null;
     } catch (error) {
+        console.log("something went wrong")
         setActivityIndicator(false)
         dispatch({type: 'add_error', payload: error.response.data.error.message})
     }
@@ -233,10 +237,11 @@ const updateAccount = dispatch => async(updates, setshowActivityIndicator, callb
 }
 
 const addErrorMessage = dispatch =>(error)=> dispatch({type: 'add_error', payload: error})
-const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'})
+const clearErrorMessage = dispatch =>()=> dispatch({type: 'clear_error'});
+const updateSubscription = dispatch =>(subscription)=> dispatch({type: 'update_subscription', payload: subscription})
 
 export const { Context, Provider } = createDataContext(
     AuthReducer,
-    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, verfiyOTP, resetPassword, updateAccount, addErrorMessage, clearErrorMessage, fetchPodcasts},
-    {user: null, token: null, errorMessage: '', successMessage: '', podcasts:[], OTP: '', emailToReset: ''}
+    { signup, signin, signout, tryLocalSignin, registerSubscription, forgotPassword, verfiyOTP, resetPassword, updateAccount, updateSubscription, addErrorMessage, clearErrorMessage, fetchPodcasts},
+    {user: {}, token: null, errorMessage: '', successMessage: '', podcasts:[], subscription: [], OTP: '', emailToReset: ''}
 )

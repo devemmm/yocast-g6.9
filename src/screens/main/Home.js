@@ -71,6 +71,8 @@ const fectchPodcast = async ({navigation, todayDate, setPodcast, dispatchCategor
             setshowActivityIndicator(false);
             navigation.navigate("SubscriptionWorn")
         } else if (status == "successfull" && subscription.length > 0 && (new Date(subscription[0].desactivationDate) >= new Date())) {
+            
+            await AsyncStorage.setItem('@YOCAST_SUB', JSON.stringify(subscription));
             const desactivationDate = new Date(subscription[0].desactivationDate);
             const remainingTime = desactivationDate - new Date();
             const remainingDays = remainingTime / (1000 * 3600 * 24)
@@ -164,7 +166,7 @@ const Home = ({ navigation }) => {
                             "Good afternoon," :
                             todayDate.hour >= 18 && todayDate.hour < 24 ?
                                 "Good evening," : null
-                    } <Text style={{ textTransform: 'capitalize' }}> {state.user.email} </Text>
+                    } <Text style={{ textTransform: 'capitalize' }}> {state.user.names} </Text>
                 </Text>
                 <TouchableOpacity
                     onPress={() => showRemainingDays === "none" ? setShowRemainingDays("flex") : setShowRemainingDays("none")}
