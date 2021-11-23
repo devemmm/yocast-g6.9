@@ -11,6 +11,8 @@ import LoginScreen from "./src/screens/authentication/LoginScreen";
 import OtpVerfication from "./src/screens/authentication/OtpVerfication";
 import ResetPassword from "./src/screens/authentication/ResetPassword";
 import SignupScreen from "./src/screens/authentication/SignupScreen";
+import SubscriptionWorn from './src/screens/main/SubscriptionWorn';
+import FreePodcast from './src/screens/main/FreePodcast';
 import ProfilePage from "./src/screens/main/ProfilePage";
 import AboutUsScreen from './src/screens/main/AboutUsScreen';
 import TermAndPrivacy from './src/screens/main/TermAndPrivacy';
@@ -57,9 +59,12 @@ const AuthenticationFlow = () => {
 const HomeStackNavigation = () => {
   return (
     <StackNavigation.Navigator 
-    initialRouteName="Home"
-    screenOptions={{ headerShown: false }}>
+      initialRouteName="Home"
+      screenOptions={{ headerShown: false }}
+    >
       <StackNavigation.Screen name="Home" component={Home} />
+      <StackNavigation.Screen name="SubscriptionWorn" component={SubscriptionWorn} />
+      <StackNavigation.Screen name="FreePodcast" component={FreePodcast} />
       <StackNavigation.Screen name="CategoryPage" component={CategoryPage} />
     </StackNavigation.Navigator>
   );

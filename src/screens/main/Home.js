@@ -1,15 +1,15 @@
-import React, { useReducer, useState, Component, useEffect, useContext } from 'react'
-import { View, Text, StatusBar, ScrollView, SliderBox, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import React, { useReducer, useState, useEffect, useContext } from 'react'
+import { View, Text, StatusBar, ScrollView, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { BottomSheet } from 'react-native-btr'
 import { H, W, _grey, APP_BACKGROUND_COLOR, APP_ORANGE_COLOR, APP_WHITE_COLOR, theme } from '../../constants/constants'
 import yocastApi from '../../api/yocastApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Context as DataContext } from '../../context/AppContext';
 import { AppActivityIndictor } from '../../components/AppActivityIndictor';
 import { PodcastList } from '../../components/PodcastList';
 import { FreePodcasts } from '../../components/FreePodcasts';
 import { PodcastCategory } from '../../components/PodcastCategory';
-import { SubscriptionModel } from '../../components/SubscriptionModel';
 
 const categoryReducer = (state, action) => {
 
@@ -53,22 +53,23 @@ const todayDateReducer = (state, action) => {
 }
 
 
-const fectchPodcast = async ({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays }) => {
+const fectchPodcast = async ({navigation, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setRemainingDays }) => {
     try {
         setshowActivityIndicator(true);
-
+        const dataa = await AsyncStorage.getItem('@USERDATA');
+        const user = JSON.parse(dataa)
         const response1 = await yocastApi.get('/user/subscription?type=last', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${user.token.token}`
             }
         });
 
-        let { message, status, statusCode, subscription } = response1.data;
+        let { status, subscription } = response1.data;
 
         if (status == "successfull" && subscription.length == 0) {
-            setNotSubscribedModal(true)
+            setPodcast([])
             setshowActivityIndicator(false);
-
+            navigation.navigate("SubscriptionWorn")
         } else if (status == "successfull" && subscription.length > 0 && (new Date(subscription[0].desactivationDate) >= new Date())) {
             const desactivationDate = new Date(subscription[0].desactivationDate);
             const remainingTime = desactivationDate - new Date();
@@ -77,7 +78,7 @@ const fectchPodcast = async ({ token, todayDate, setPodcast, dispatchCategory, s
 
             const response = await yocastApi.get('/podcasts', {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${user.token.token}`
                 }
             });
 
@@ -99,18 +100,19 @@ const fectchPodcast = async ({ token, todayDate, setPodcast, dispatchCategory, s
             setshowActivityIndicator(false);
 
         } else {
-            setNotSubscribedModal(true)
+            setPodcast([])
             setshowActivityIndicator(false);
+            navigation.navigate("SubscriptionWorn")
         }
     } catch (error) {
-        setNotSubscribedModal(true)
+        console.log(error.response.data)    
+        setPodcast([])
         setshowActivityIndicator(false)
     }
 }
 const Home = ({ navigation }) => {
 
     const { state } = useContext(DataContext);
-    const { token, user } = state;
     const [remainingDays, setRemainingDays] = useState('')
 
     const [category, dispatchCategory] = useReducer(categoryReducer, { Business: [], Education: [], Education: [], Politics: [], Music: [], Tech: [], TopExpensive: [], Popular: [], Trending: [], LatestRelease: [], Free: [] })
@@ -118,7 +120,6 @@ const Home = ({ navigation }) => {
 
     const [podcasts, setPodcast] = useState([]);
     const [tag, setTag] = useState('latest')
-    const [NotSubscribedModal, setNotSubscribedModal] = useState(false);
     const [showActivityIndicator, setshowActivityIndicator] = useState(false);
     const [showRemainingDays, setShowRemainingDays] = useState("none");
 
@@ -141,8 +142,7 @@ const Home = ({ navigation }) => {
 
             dispatchDate({ type: 'today', payload: today });
             dispatchDate({ type: 'month', payload: __monthly });
-
-            fectchPodcast({ token, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setNotSubscribedModal, setRemainingDays });
+            fectchPodcast({navigation, todayDate, setPodcast, dispatchCategory, setshowActivityIndicator, setRemainingDays });
         })
         return unsubscribe;
 
@@ -156,13 +156,6 @@ const Home = ({ navigation }) => {
                 backgroundColor={APP_BACKGROUND_COLOR}
             />
 
-            {/* subscription modal */}
-            <SubscriptionModel 
-                navigation = {navigation}
-                NotSubscribedModal = {NotSubscribedModal}
-                setNotSubscribedModal = {()=>setNotSubscribedModal(!NotSubscribedModal)}
-            />
-
             <View style={{ paddingHorizontal: 15, height: H * .12, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
                 <Text style={{ fontSize: 17, fontWeight: 'bold', color: APP_ORANGE_COLOR }}>
                     {todayDate.hour >= 0 && todayDate.hour < 12 ?
@@ -171,7 +164,7 @@ const Home = ({ navigation }) => {
                             "Good afternoon," :
                             todayDate.hour >= 18 && todayDate.hour < 24 ?
                                 "Good evening," : null
-                    } <Text style={{ textTransform: 'capitalize' }}> {state.user.names} </Text>
+                    } <Text style={{ textTransform: 'capitalize' }}> {state.user.email} </Text>
                 </Text>
                 <TouchableOpacity
                     onPress={() => showRemainingDays === "none" ? setShowRemainingDays("flex") : setShowRemainingDays("none")}
@@ -285,8 +278,10 @@ const Home = ({ navigation }) => {
             }
 
             <BottomSheet visible={showActivityIndicator}>
+
                 <AppActivityIndictor />
             </BottomSheet>
+
         </ScrollView>
     );
 }
